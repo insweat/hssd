@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Legions" id="110000" parent="100000" leaf="false">
+    <traits>
+        <Trait name="Entity"/>
+        <Trait name="Legion"/>
+    </traits>
+    <properties>
+        <Property path="birth" sym="" value=""/>
+        <Property path="birth.month" sym="" value=""/>
+        <Property path="birth.year" sym="" value=""/>
+        <Property path="capital" sym="" value=""/>
+        <Property path="death" sym="" value=""/>
+        <Property path="death.month" sym="" value=""/>
+        <Property path="death.year" sym="" value=""/>
+        <Property path="gender" sym="" value=""/>
+        <Property path="members" sym="" value=""/>
+    </properties>
+</Entry>

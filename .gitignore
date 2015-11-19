@@ -2,7 +2,9 @@
 *.log
 
 # sbt specific
-.cache
+bin/
+*/.cache
+*/.cache-main
 .history
 .lib/
 dist/*
@@ -15,3 +17,13 @@ project/plugins/project/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+
+# Eclipse specific
+.metadata/
+.recommenders/
+RemoteSystemsTempFiles/
+*/.settings/
+
+# Misc
+.DS_Store
+*/.DS_Store

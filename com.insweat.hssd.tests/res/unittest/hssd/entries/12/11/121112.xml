@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="human_warrior_femaleA" id="121112" parent="121110" leaf="true">
+    <traits> </traits>
+    <properties>
+        <Property path="gender" sym=":=" value="-1"/>
+        <Property path="health" sym="=&gt;" value="0.95 * x"/>
+    </properties>
+</Entry>

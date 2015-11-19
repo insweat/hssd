@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.insweat.com/CommonDef"
+    xmlns:tns="http://www.insweat.com/CommonDef"
+    elementFormDefault="qualified">
+
+    <simpleType name="ID">
+        <restriction base="string">
+            <pattern value="[_a-zA-Z][_a-zA-Z0-9]*"></pattern>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="IndependentName">
+        <restriction base="string">
+            <pattern value="[A-Z][_a-zA-Z0-9]*"></pattern>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="DependentName">
+        <restriction base="string">
+            <pattern value="[_a-z][_a-zA-Z0-9]*"></pattern>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AggregatedName">
+        <restriction base="string">
+            <pattern value="[_a-z][_a-zA-Z0-9]*(\{\d+\}|\{\d+,\d+\})?"></pattern>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="QName">
+        <restriction base="string">
+            <pattern value="[_a-zA-Z][_a-zA-Z0-9]*(\.[_a-zA-Z][_a-zA-Z0-9]*)*">
+            </pattern>
+        </restriction>
+    </simpleType>
+</schema>

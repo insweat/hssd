@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Tags" id="200223" parent="201873" leaf="false">
+    <traits>
+        <Trait name="Tag"/>
+    </traits>
+    <properties>
+        <Property path="classNames" sym="=&gt;" value="&quot;TestTag,&quot; + x"/>
+        <Property path="isPublic" sym="" value=""/>
+        <Property path="singleton" sym="" value=""/>
+    </properties>
+</Entry>

@@ -1,0 +1,12 @@
+anifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: com.insweat.hssd.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: tests.jar
+Export-Package: com.insweat.hssd.tests.lib.essense,
+ com.insweat.hssd.tests.lib.tree,
+ com.insweat.hssd.util
+Require-Bundle: org.scala-lang.modules.scala-xml;bundle-version="1.0.1",
+ org.scala-lang.scala-library;bundle-version="2.11.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

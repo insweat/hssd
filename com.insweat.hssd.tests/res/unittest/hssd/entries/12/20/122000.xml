@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="NPCs" id="122000" parent="120000" leaf="false">
+    <traits>
+        <Trait name="NPC"/>
+    </traits>
+    <properties> </properties>
+</Entry>

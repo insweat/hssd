@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.insweat.com/HSSDDef"
+    xmlns:tns="http://www.insweat.com/HSSDDef"
+    elementFormDefault="qualified"
+    xmlns:pref="http://www.insweat.com/CommonDef">
+
+    <import
+        schemaLocation="CommonDef.xsd"
+        namespace="http://www.insweat.com/CommonDef"></import>
+    <element
+        name="Database"
+        type="tns:Database">
+    </element>
+
+    <complexType name="Database">
+        <sequence>
+            <element
+                name="schemas"
+                type="tns:SchemaSeq">
+            </element>
+            <element
+                name="EntryTree"
+                type="tns:EntryTree">
+            </element>
+        </sequence>
+        <attribute
+            name="name"
+            type="pref:ID"
+            use="required">
+        </attribute>
+        <attribute
+            name="version"
+            type="int">
+        </attribute>
+    </complexType>
+
+    <complexType name="Schema">
+        <attribute
+            name="uri"
+            type="anyURI"
+            use="required">
+        </attribute>
+    </complexType>
+
+    <complexType name="EntryTree">
+        <attribute
+            name="uri"
+            type="anyURI"
+            use="required">
+        </attribute>
+        <attribute
+            name="schema"
+            type="pref:QName">
+        </attribute>
+    </complexType>
+
+    <complexType name="SchemaSeq">
+        <sequence>
+            <element
+                name="Schema"
+                type="tns:Schema"
+                minOccurs="1"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="SettingSeq">
+        <sequence>
+            <element
+                name="Setting"
+                type="tns:Setting"
+                minOccurs="1"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+    
+    <complexType name="Setting">
+    	<attribute name="name" use="required" type="pref:QName">
+    	</attribute>
+    	<attribute name="value" type="string" use="required"></attribute>
+    </complexType>
+</schema>

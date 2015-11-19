@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Characters" id="120000" parent="100000" leaf="false">
+    <traits>
+        <Trait name="Entity"/>
+    </traits>
+    <properties>
+        <Property path="birth" sym="" value=""/>
+        <Property path="birth.month" sym=":=" value="12.0"/>
+        <Property path="birth.year" sym="" value=""/>
+        <Property path="caption" sym=":=" value="5000007.0"/>
+        <Property path="death" sym="" value=""/>
+        <Property path="death.month" sym="" value=""/>
+        <Property path="death.year" sym="" value=""/>
+        <Property path="gender" sym="" value=""/>
+    </properties>
+</Entry>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="PCs" id="121000" parent="120000" leaf="false">
+    <traits>
+        <Trait name="PC"/>
+    </traits>
+    <properties>
+        <Property path="birth.month" sym="=&gt;" value=" x-1"/>
+        <Property path="luckyColor" sym="" value=""/>
+        <Property path="luckyColor.0" sym="" value=""/>
+        <Property path="luckyColor.1" sym=":=" value="alpha=&quot;255.0&quot; blue=&quot;0.0&quot; green=&quot;0.0&quot; red=&quot;255.0&quot;"/>
+    </properties>
+</Entry>

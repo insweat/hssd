@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.insweat.com/SchemaDef"
+    xmlns:tns="http://www.insweat.com/SchemaDef"
+    elementFormDefault="qualified"
+    xmlns:pref="http://www.insweat.com/CommonDef">
+
+    <import
+        schemaLocation="CommonDef.xsd"
+        namespace="http://www.insweat.com/CommonDef"></import>
+    <complexType name="Schema">
+        <sequence>
+            <element
+                name="enumerations"
+                type="tns:EnumerationSeq"
+                minOccurs="0">
+            </element>
+            <element
+                name="complexes"
+                type="tns:ComplexSeq"
+                minOccurs="0">
+            </element>
+            <element
+                name="traits"
+                type="tns:TraitSeq"
+                minOccurs="0">
+            </element>
+        </sequence>
+        <attribute
+            name="name"
+            use="required"
+            type="pref:ID">
+        </attribute>
+        <attribute
+            name="version"
+            use="required">
+            <simpleType>
+                <restriction base="long">
+                    <minExclusive value="0"></minExclusive>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute
+            name="parent"
+            type="pref:QName">
+        </attribute>
+    </complexType>
+
+    <complexType name="EnumerationSeq">
+        <sequence>
+            <element
+                name="Enum"
+                type="tns:Enum"
+                minOccurs="1"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Enum">
+        <sequence>
+            <element
+                name="description"
+                type="string"
+                minOccurs="0">
+            </element>
+            <element
+                name="attributes"
+                type="tns:AttributeSeq"
+                minOccurs="0">
+            </element>
+            <element
+                name="values"
+                type="tns:EnumValueSeq"
+                minOccurs="1">
+            </element>
+        </sequence>
+        <attribute
+            name="name"
+            type="pref:IndependentName"
+            use="required">
+        </attribute>
+    </complexType>
+
+    <complexType name="Trait">
+        <sequence>
+            <element
+                name="description"
+                type="string"
+                minOccurs="0">
+            </element>
+            <element
+                name="attributes"
+                type="tns:AttributeSeq"
+                minOccurs="0">
+            </element>
+            <element
+                name="elements"
+                type="tns:ElementSeq"
+                minOccurs="0">
+            </element>
+        </sequence>
+        <attribute
+            name="name"
+            type="pref:IndependentName"
+            use="required">
+        </attribute>
+        <attribute
+            name="caption"
+            type="string"
+            use="optional">
+        </attribute>
+    </complexType>
+
+    <complexType name="Complex">
+        <sequence>
+            <element
+                name="description"
+                type="string"
+                minOccurs="0">
+            </element>
+            <element
+                name="attributes"
+                type="string"
+                minOccurs="0">
+            </element>
+            <element
+                name="elements"
+                type="tns:ElementSeq"
+                minOccurs="0">
+            </element>
+        </sequence>
+        <attribute
+            name="name"
+            type="pref:IndependentName"
+            use="required">
+        </attribute>
+    </complexType>
+
+    <complexType name="AttributeSeq">
+        <sequence>
+            <element
+                name="Attrib"
+                type="tns:Attrib"
+                minOccurs="1"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Attrib">
+        <sequence></sequence>
+        <attribute
+            name="name"
+            type="tns:AttribName"
+            use="required">
+        </attribute>
+        <attribute
+            name="value"
+            type="string"
+            use="required">
+        </attribute>
+    </complexType>
+
+    <complexType name="EnumValue">
+        <sequence>
+            <element
+                name="description"
+                type="string"
+                minOccurs="0"
+                maxOccurs="1">
+            </element>
+        </sequence>
+        <attribute
+            name="name"
+            type="pref:IndependentName"
+            use="required">
+        </attribute>
+        <attribute
+            name="value"
+            type="string"
+            use="optional">
+        </attribute>
+    </complexType>
+
+    <complexType name="Element">
+        <sequence>
+            <element
+                name="description"
+                type="string"
+                minOccurs="0">
+            </element>
+            <element
+                name="attributes"
+                type="tns:AttributeSeq"
+                minOccurs="0">
+            </element>
+        </sequence>
+        <attribute
+            name="caption"
+            type="string"
+            use="required">
+        </attribute>
+        <attribute
+            name="name"
+            type="pref:AggregatedName"
+            use="required">
+        </attribute>
+        <attribute
+            name="thype"
+            type="tns:ThypeName"
+            use="required">
+        </attribute>
+        <attribute
+            name="defaultValue"
+            type="string"
+            use="optional">
+        </attribute>
+    </complexType>
+
+    <complexType name="EnumValueSeq">
+        <sequence>
+            <element
+                name="EnumValue"
+                type="tns:EnumValue"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+
+    <element
+        name="Schema"
+        type="tns:Schema">
+    </element>
+
+    <complexType name="ComplexSeq">
+        <sequence>
+            <choice maxOccurs="unbounded">
+	            <element
+	                name="Complex"
+	                type="tns:Complex">
+	            </element>
+                <element
+                    name="Tuple"
+                    type="tns:Complex">
+                </element>
+            </choice>
+        </sequence>
+    </complexType>
+
+    <complexType name="TraitSeq">
+        <sequence>
+            <element
+                name="Trait"
+                type="tns:Trait"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="ElementSeq">
+        <sequence>
+            <element
+                name="Element"
+                type="tns:Element"
+                maxOccurs="unbounded">
+            </element>
+        </sequence>
+    </complexType>
+
+
+    <simpleType name="ThypeName">
+        <restriction base="string">
+            <pattern value="[A-Z][_a-zA-Z0-9]*(\[\S+\])*"></pattern>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AttribName">
+        <restriction base="string">
+            <pattern value="[_a-z][_a-zA-Z0-9]*(\.[_a-z][_a-zA-Z0-9]*)*">
+            </pattern>
+        </restriction>
+    </simpleType>
+</schema>

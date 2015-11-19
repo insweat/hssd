@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Root" id="100000" parent="0" leaf="false">
+    <traits>
+        <Trait name="Entry"/>
+    </traits>
+    <properties>
+        <Property path="caption" sym="" value=""/>
+        <Property path="isPublic" sym="" value=""/>
+        <Property path="tags" sym="" value=""/>
+    </properties>
+</Entry>

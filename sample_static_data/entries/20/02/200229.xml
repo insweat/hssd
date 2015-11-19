@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="test_sample_hidden" id="200229" parent="200228" leaf="true">
+    <traits> </traits>
+    <properties>
+        <Property path="isPublic" sym=":=" value="true"/>
+    </properties>
+</Entry>

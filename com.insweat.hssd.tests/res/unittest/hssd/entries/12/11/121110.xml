@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Warriors" id="121110" parent="121100" leaf="false">
+    <traits>
+        <Trait name="Warrior"/>
+    </traits>
+    <properties>
+        <Property path="attackEffectiveRange" sym="" value=""/>
+        <Property path="attackFrequence" sym="" value=""/>
+        <Property path="birth.month" sym=":=" value="10.0"/>
+        <Property path="physicalAttack" sym="" value=""/>
+        <Property path="warriorExp" sym="" value=""/>
+    </properties>
+</Entry>

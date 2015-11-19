@@ -1,0 +1,30 @@
+<Entries name="Root" id="100000">
+    <Entry name="Items" id="110000">
+        <Entry name="Runes" id="111000">
+            <Entry name="rune_sample_0" id="111001" leaf="leaf"/>
+            <Entry name="rune_sample_1" id="111002" leaf="leaf"/>
+            <Entry name="rune_sample_2" id="111003" leaf="leaf"/>
+        </Entry>
+        <Entry name="Weapons" id="112000">
+            <Entry name="Daggers" id="112100">
+                <Entry name="dagger_sample_0" id="112101" leaf="leaf"/>
+                <Entry name="dagger_sample_1" id="112102" leaf="leaf"/>
+                <Entry name="dagger_sample_2" id="112103" leaf="leaf"/>
+            </Entry>
+            <Entry name="Swords" id="112200">
+                <Entry name="sword_sample_0" id="112201" leaf="leaf"/>
+                <Entry name="sword_sample_1" id="112202" leaf="leaf"/>
+                <Entry name="sword_sample_2" id="112203" leaf="leaf"/>
+                <Entry name="sword_sample_3" id="112204" leaf="leaf"/>
+                <Entry name="sword_sample_4" id="112205" leaf="leaf"/>
+                <Entry name="sword_sample_5" id="112206" leaf="leaf"/>
+                <Entry name="sword_sample_6" id="112207" leaf="leaf"/>
+            </Entry>
+            <Entry name="Runes" id="112300">
+            </Entry>
+        </Entry>
+    </Entry>
+    <Entry name="Characters" id="120000">
+    </Entry>
+    <Entry name="Settings" id="130000"/>
+</Entries>

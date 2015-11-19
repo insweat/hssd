@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="BadBranch" id="121120" parent="121100" leaf="false">
+    <traits> </traits>
+    <properties>
+        <Property path="gender" sym="!!" value="No such element '(some error gender)' in EnumThype(EGender)"/>
+    </properties>
+</Entry>

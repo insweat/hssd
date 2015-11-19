@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Humen" id="121100" parent="121000" leaf="false">
+    <traits>
+        <Trait name="Human"/>
+    </traits>
+    <properties>
+        <Property path="health" sym=":=" value="1000.0"/>
+        <Property path="magicalDefence" sym="" value=""/>
+        <Property path="magicalResistence" sym="" value=""/>
+        <Property path="mana" sym="" value=""/>
+        <Property path="physicalDefence" sym="" value=""/>
+        <Property path="physicalResistence" sym="" value=""/>
+    </properties>
+</Entry>

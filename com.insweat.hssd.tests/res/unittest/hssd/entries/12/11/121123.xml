@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="human_bad" id="121123" parent="121120" leaf="true">
+    <traits> </traits>
+    <properties>
+        <Property path="health" sym="=&gt;" value="(some error health)"/>
+    </properties>
+</Entry>

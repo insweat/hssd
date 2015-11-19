@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="HSSD" id="201873" parent="100001" leaf="false">
+    <traits>
+        <Trait name="Export"/>
+    </traits>
+    <properties>
+        <Property path="classNames" sym=":=" value="TestHSSD"/>
+    </properties>
+</Entry>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entry name="Strongholds" id="130000" parent="100000" leaf="false">
+    <traits>
+        <Trait name="Entity"/>
+        <Trait name="Stronghold"/>
+    </traits>
+    <properties>
+        <Property path="birth" sym="" value=""/>
+        <Property path="birth.month" sym="" value=""/>
+        <Property path="birth.year" sym="" value=""/>
+        <Property path="death" sym="" value=""/>
+        <Property path="death.month" sym="" value=""/>
+        <Property path="death.year" sym="" value=""/>
+        <Property path="gender" sym="" value=""/>
+        <Property path="resource" sym="" value=""/>
+        <Property path="size" sym="" value=""/>
+    </properties>
+</Entry>

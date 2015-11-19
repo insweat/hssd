@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:Database 
+name="correctDB" version="1" xsi:schemaLocation="http://www.insweat.com/HSSDDef ../../../../com.insweat.hssd.lib/res/xsd/HSSDDef.xsd " xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://www.insweat.com/HSSDDef" xmlns="">
+    <tns:schemas>
+        <tns:Schema uri="schemas/schema.xml"/>
+    </tns:schemas>
+    <tns:EntryTree uri="entries/" schema="correctSchema"/>
+    <tns:settings>
+    	<tns:Setting name="" value=""/>
+    </tns:settings>
+</tns:Database>
