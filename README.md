@@ -9,7 +9,7 @@ An editor for Highly Structured Static Data.
 
 ### Prerequisites
 
- 1. For now, you need [Java JDK 8](http://www.oracle.com/technetwork/cn/java/javase/downloads/index.html). Earlier JDK versions do not work. JDK is required to evaluate / develop `HSSD` in Eclipse. For the a production build of `HSSD` a proper JRE should suffice.
+ 1. For now, you need [Java JDK 8](http://www.oracle.com/technetwork/cn/java/javase/downloads/index.html). Earlier JDK versions do not work. JDK is required to evaluate / develop `HSSD` in Eclipse. For a production build of `HSSD` a proper JRE should suffice.
  2. [Download](www.eclipse.org/downloads) the `Eclipse for RCP and RAP Developers` bundle, and [install](http://scala-ide.org/download/current.html) the corresponding `Scala IDE` plugin (via the update site). As of the writing of this tutorial, `Eclipse Mars.1 (4.5.1)` and `Scala IDE 4.2.0` are used. If it asks you to configure your Scala Plugin, do as it instructs you to, and the defaults should work.
  
 Note, if you are on Mac and get issues starting either Eclipse or `HSSD`, take a look at [Eclipse Kepler for OS X Mavericks request Java SE 6](http://stackoverflow.com/questions/19563766/eclipse-kepler-for-os-x-mavericks-request-java-se-6). The post might be about different Java and Eclipse versions, but the instructions should still work.
