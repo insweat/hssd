@@ -3,9 +3,9 @@ An editor for Highly Structured Static Data.
 
 ### Status
 
- * Almost all editor features should work on Windows and Mac. However, entry creation (and features depend on it such as duplication) does not, because the ID service implementation was too specific to MySQL, and thus has been removed.
+ * Almost all editor features should work on Windows and Mac. However, you need to implement your own ID allocator to allow features such as entry creation and entry duplication to work, because those features depend on ID allocation. An ID allocator can be very easily implemented using an auto-incerement primary key in a rational DB such as MySQL. See [exec_id_alloc.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_id_alloc.demo) for more information.
  * The code export and the data export implementations involve details of a private project, and thus have been removed.
- * The publish process is not well worked on, and it may or may not work. Currently, you can launch the `HSSD` from Eclipse (see [Getting Started](#GettingStarted)) for evaluation.
+ * The publish process is not well worked on, and it may or may not work. Currently, you can launch `HSSD` from Eclipse (see [Getting Started](#GettingStarted)) for evaluation.
 
 ### Prerequisites
 
