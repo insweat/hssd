@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISourceProvider;
@@ -16,6 +17,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.services.ISourceProviderService;
 
 import com.insweat.hssd.editor.editors.entry.EditorInput;
@@ -80,6 +82,15 @@ public final class Helper {
         }
 
         return (HSSDEditor)ep;
+    }
+    
+    public static IProject getActiveProject() {
+        HSSDEditor hssdEditor = getActiveHSSDEditor();
+        if(hssdEditor == null) {
+            return null;
+        }
+        FileEditorInput fei = (FileEditorInput)hssdEditor.getEditorInput();
+        return fei.getFile().getProject();
     }
 
     public static IWorkbench getWB() {

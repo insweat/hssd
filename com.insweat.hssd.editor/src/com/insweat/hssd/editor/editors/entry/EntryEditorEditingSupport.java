@@ -180,7 +180,8 @@ public class EntryEditorEditingSupport extends EditingSupport {
                 // LString is copied on write
                 if(!ValueTreeLP.isOverridden((TreeNode)element)) {
                     final IDService svc = Helper.getIDSvc();
-                    final long sid = svc.acquire(IDService.Namespace.STRING_ID);
+                    final long sid = svc.acquire(Helper.getActiveProject(),
+                            IDService.Namespace.STRING_ID);
                     final String sym = ValExpr.absSym();
                     final ValExpr ve = ValExpr.make(sym, thype, sid);
                     vd.valex_$eq(Option.apply(ve));

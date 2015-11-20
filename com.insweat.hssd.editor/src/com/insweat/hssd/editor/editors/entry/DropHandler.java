@@ -76,7 +76,8 @@ public class DropHandler extends ViewerDropAdapter {
         		return false;
         	}
         	IDService idSvc = Helper.getIDSvc();
-        	long id = idSvc.acquire(IDService.Namespace.ENTRY_ID);
+        	long id = idSvc.acquire(Helper.getActiveProject(),
+        	        IDService.Namespace.ENTRY_ID);
         	
         	String name = camelToSnake(en.get().name()).toLowerCase();
         	name = UIHelper.mkName(en.get(), LEAF_PATTERN, name, true);

@@ -36,7 +36,8 @@ public class HSSDEditorAddEntry extends AbstractCommandHandler {
 
         
         final Shell shell = editor.getSite().getShell();
-        final long entryID = idSvc.acquire(IDService.Namespace.ENTRY_ID);
+        final long entryID = idSvc.acquire(Helper.getActiveProject(),
+                IDService.Namespace.ENTRY_ID);
         
         final EntryTree tree = editor.getMasterCP().getEntryTree();
         if(parent == null) {

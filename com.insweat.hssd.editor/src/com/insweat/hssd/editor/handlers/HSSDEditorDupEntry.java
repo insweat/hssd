@@ -106,7 +106,8 @@ public class HSSDEditorDupEntry extends AbstractCommandHandler {
 	
 	private List<Long> allocIDs(int numIDs) {
         IDService svc = Helper.getIDSvc();
-        long[] ids = svc.multiAcquire(IDService.Namespace.ENTRY_ID, numIDs);
+        long[] ids = svc.multiAcquire(Helper.getActiveProject(),
+                IDService.Namespace.ENTRY_ID, numIDs);
         List<Long> rv = new ArrayList<>(ids.length);
         for(long id: ids) {
         	rv.add(id);

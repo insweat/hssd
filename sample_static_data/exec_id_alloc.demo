@@ -1,0 +1,29 @@
+#! /usr/bin/env bash
+
+# This routine is used by HSSD to allocate IDs.
+#
+# It MUST be placed under the root of the HSSD project, and named
+#   exec_id_alloc<ext>
+# where <ext> can be one of
+#   "", ".sh", ".py", ".exe", ".cmd", ".bat" or ".demo"
+# (HSSD uses the first existence in this order).
+# You can implement it in the way you feel most convenient, as long as it is
+# eXecutable.
+#
+# The implementation MUST take two positional arguments: namespace and count.
+# Right now, namespace is one of
+#   "tools.hssd.entry_id" or "tools.hssd.string_id"
+# for entry id and string id, respectively, and count for the number of IDs
+# requested in the batch.
+#
+# On success, the implementation MUST emit the start ID to STDOUT, and exit
+# with 0.
+# On failure, the implementation MUST emit the error message to STDERR, and 
+# exit with non-zero. 
+#
+# See:
+#   com.insweat.hssd.editor/src/com/insweat/hssd/editor/services/IDService.java
+
+echo "DIY your ID allocator!" >&2
+exit 1
+
