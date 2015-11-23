@@ -27,6 +27,6 @@ public class Logging {
             String name,
             int level,
             boolean propagate) {
-        return logger.getChild(name, Interop.opt((Object)level), propagate);
+        return logger.getChild(name, Interop.opt(Integer.valueOf(level)), propagate);
     }
 }
