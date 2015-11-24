@@ -37,7 +37,7 @@ Note, if you are on Mac and get issues starting either Eclipse or `HSSD`, take a
 
 ### Making Builds Manually<a name="MakingBuildsManually"></a>
 
- 1. Make sure all relevant projects compiles without error.
+ 1. Make sure all relevant projects compile without error.
  2. Open `com.insweat.hssd.editor/hssd.product`, and select the `Overview` page. Click the `Eclipse Product export wizard` link under the `Exporting` section on the right.
  3. On the popping wizard,
     * `Configuration` - /com.insweat.hssd.editor/hssd.product
@@ -46,7 +46,7 @@ Note, if you are on Mac and get issues starting either Eclipse or `HSSD`, take a
     * `Destination - Directory` - Click `Browse` and choose yours
     * `Export source` - UNCHECKED
     * `Generate p2 repository` - UNCHECKED
-    * `Export for multiple platforms` - CHECKED (You usually do not see this or need this, see http://wiki.eclipse.org/Building#Preferred_way_of_doing_multi-platform_builds)
+    * `Export for multiple platforms` - CHECKED (You usually do not see this or need this, see [here](http://wiki.eclipse.org/Building#Preferred_way_of_doing_multi-platform_builds))
     * `Allow for binary cycles in target platform` - CHECKED
  4. Click `Finish` to export product
  5. Open `com.insweat.hssd.editor/plugins.xml`, and select the `Overview` page. Click the `Export Wizard` link under the `Exporting` section on the right.
