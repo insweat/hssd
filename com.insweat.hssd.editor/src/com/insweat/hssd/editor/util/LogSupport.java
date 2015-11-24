@@ -36,43 +36,34 @@ public class LogSupport {
         return logger;
     }
     
-    protected void logf(int level, String fmt, Object[] args) {
-        try {
-            getLogger().log(level, String.format(fmt, args));
-        }
-        catch(Exception e) {
-            getLogger().log(Logging.LEVEL_ERROR, String.format(
-                    "Error logging %s %s", fmt, args));
-        }
-    }
     
     public void debugf(String fmt, Object ... args) {
-    	logf(Logging.LEVEL_DEBUG, fmt, args);
+    	Logging.debugf(logger, fmt, args);
     }
 
     
     public void infof(String fmt, Object ... args) {
-    	logf(Logging.LEVEL_INFO, fmt, args);
+    	Logging.infof(logger, fmt, args);
     }
 
     
     public void noticef(String fmt, Object ... args) {
-    	logf(Logging.LEVEL_NOTICE, fmt, args);
+    	Logging.noticef(logger, fmt, args);
     }
 
     
     public void warnf(String fmt, Object ... args) {
-    	logf(Logging.LEVEL_WARNING, fmt, args);
+    	Logging.warnf(logger, fmt, args);
     }
 
     
     public void errorf(String fmt, Object ... args) {
-    	logf(Logging.LEVEL_ERROR, fmt, args);
+    	Logging.errorf(logger, fmt, args);
     }
 
     
     public void criticalf(String fmt, Object ... args) {
-    	logf(Logging.LEVEL_CRITICAL, fmt, args);
+    	Logging.criticalf(logger, fmt, args);
     }
 
     

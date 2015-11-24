@@ -29,4 +29,46 @@ public class Logging {
             boolean propagate) {
         return logger.getChild(name, Interop.opt(Integer.valueOf(level)), propagate);
     }
+
+    protected static void logf(
+            Logger logger, int level, String fmt, Object[] args) {
+        try {
+            logger.log(level, String.format(fmt, args));
+        }
+        catch(Exception e) {
+            getRoot().log(Logging.LEVEL_ERROR, String.format(
+                    "Error logging %s %s", fmt, args));
+        }
+    }
+    
+    public static void debugf(Logger logger, String fmt, Object ... args) {
+    	logf(logger, LEVEL_DEBUG, fmt, args);
+    }
+    
+    public static void infof(Logger logger, String fmt, Object ... args) {
+    	logf(logger, LEVEL_INFO, fmt, args);
+    }
+
+    public static void noticef(Logger logger, String fmt, Object ... args) {
+    	logf(logger, LEVEL_NOTICE, fmt, args);
+    }
+
+    public static void warnf(Logger logger, String fmt, Object ... args) {
+    	logf(logger, LEVEL_WARNING, fmt, args);
+    }
+
+    public static void errorf(Logger logger, String fmt, Object ... args) {
+    	logf(logger, LEVEL_ERROR, fmt, args);
+    }
+
+    public static void criticalf(Logger logger, String fmt, Object ... args) {
+    	logf(logger, LEVEL_CRITICAL, fmt, args);
+    }
+    
+    public static void exceptionf(Logger logger, int level, Throwable t, String fmt, Object ... args) {
+        logger.log(level,
+                String.format(fmt, args),
+                Interop.list(Interop.tuple("exception", t)));
+    }
+
 }

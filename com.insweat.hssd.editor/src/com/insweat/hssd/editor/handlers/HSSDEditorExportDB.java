@@ -1,5 +1,7 @@
 package com.insweat.hssd.editor.handlers;
 
+import java.io.File;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IFileEditorInput;
@@ -7,6 +9,8 @@ import org.eclipse.ui.IWorkbenchPage;
 
 import com.insweat.hssd.editor.editors.hssd.HSSDEditor;
 import com.insweat.hssd.editor.util.Helper;
+import com.insweat.hssd.export.Exporter;
+import com.insweat.hssd.lib.essence.Database;
 
 class StopIterationException extends RuntimeException {
 
@@ -30,13 +34,15 @@ public class HSSDEditorExportDB extends AbstractCommandHandler {
 
         final IWorkbenchPage activePage = Helper.getActiveWBPage();
         if(activePage.saveAllEditors(true)) {
-            doExportDB((IFile)res);
+            File loc = ((IFile)res).getLocation().toFile();
+            doExportDB(editor.getMasterCP().getDB(), loc.getParentFile());
         }
 
 	    return null;
 	}
 
-    private void doExportDB(IFile file) {
-    	throw new UnsupportedOperationException();
+    private void doExportDB(Database db, File parentLocation) {
+        Exporter exporter = new Exporter();
+        exporter.exportDB(db, parentLocation);
     }
 }

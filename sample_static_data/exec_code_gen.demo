@@ -1,0 +1,26 @@
+#! /usr/bin/env bash
+
+# This routine is used by HSSD to generate code.
+# 
+# It MUST be placed under the root of the HSSD project, and named
+#   exec_code_gen<ext>
+# where <ext> can be one of
+#   "", ".sh", ".py", ".exe", ".cmd", ".bat" or ".demo"
+# (HSSD uses the first existence in this order).
+# You can implement it in the way you feel most convenient, as long as it is
+# eXecutable.
+#
+# The implementation MUST take no arguments.
+#
+# A sophisticated implementation usually parses the schema.xml, to generate
+# code for targeting languages.
+#
+# On success, the implementation MUST exit with 0.
+# On failure, the implementation MUST emit the error message to STDERR, and 
+# exit with non-zero. 
+#
+# See:
+#   com.insweat.hssd.export/src/com/insweat/hssd/export/Exporter.java
+
+# Code generation is optional. So we generate nothing by default.
+exit 0

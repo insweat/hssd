@@ -1,22 +1,20 @@
 package com.insweat.hssd.editor.services;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 import com.insweat.hssd.editor.util.LogSupport;
 import com.insweat.hssd.editor.util.S;
+import com.insweat.hssd.lib.interop.Interop;
+import com.insweat.hssd.lib.util.Subprocess;
+
+import scala.Option;
+import scala.Tuple2;
 
 public class IDService {
     private final String EXEC_NAME = "exec_id_alloc";
-    private final String[] EXEC_EXTS = {
-            "", ".sh", ".py", ".exe", ".cmd", ".bat", ".demo"
-    };
 
     private final LogSupport log = new LogSupport("IDService");
 
@@ -57,55 +55,30 @@ public class IDService {
 
     private long doAlloc(IProject project, String ns, int n)
             throws IOException, InterruptedException {
-        File execIDAlloc = null;
-        for(String ext: EXEC_EXTS) {
-            IFile file = project.getFile(EXEC_NAME + ext);
-            if(file.exists()) {
-                execIDAlloc = file.getLocation().toFile();
-                break;
-            }
+        Option<File> execIDAlloc = Subprocess.findExecutable(
+                project.getLocation().toFile(), EXEC_NAME);
+        
+        if(!execIDAlloc.isDefined()) {
+            String err = "The %s[.*] is missing or not executable.";
+            throw new RuntimeException(String.format(err, EXEC_NAME));
         }
         
-        if(execIDAlloc == null || !execIDAlloc.canExecute()) {
-            throw new RuntimeException(
-                    "The exec_id_alloc[.*] is missing or not executable.");
+        Subprocess sp = new Subprocess(
+            Runtime.getRuntime().exec(new String[]{
+              execIDAlloc.get().getAbsolutePath(),
+              ns,
+              String.valueOf(n)
+            })
+        );
+        
+        Tuple2<String, String> rv = sp.communicate(Interop.none());
+        
+        if(0 != sp.proc().exitValue()) {
+            throw new RuntimeException(S.fmt(
+                    "%s: %s", EXEC_NAME, rv._2()));
         }
         
-        Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(new String[]{
-          execIDAlloc.getAbsolutePath(),
-          ns,
-          String.valueOf(n)
-        });
-        
-        InputStream out = proc.getInputStream();
-        InputStream err = proc.getErrorStream();
-        
-        // It does not seem possible for an exception to occur on our end,
-        // just play nice.
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(err));
-            StringBuilder errMessage = new StringBuilder();
-            String line = null;
-            while((line = br.readLine()) != null) {
-                errMessage.append(line).append(S.fmt("%n"));
-            }
-            if(0 != proc.waitFor()) {
-                throw new RuntimeException(S.fmt(
-                        "%s: %s", EXEC_NAME, errMessage));
-            }
-        } finally {
-            err.close();
-        }
-        
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(out));
-            String startIDStr = br.readLine();
-            return Long.parseLong(startIDStr);
-        }
-        finally {
-            out.close();
-        }
+        return Long.parseLong(rv._1());
     }
 
     private long die(String fmt, Object ... args) throws RuntimeException {

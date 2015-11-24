@@ -42,7 +42,7 @@ public class EditorInput implements IEditorInput {
         return hashcode;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Object getAdapter(Class adapter) {
         return null;

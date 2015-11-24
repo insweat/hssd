@@ -109,6 +109,10 @@ public class EntryTreeCP
         db.changed_$eq(false);
     }
 
+    public Database getDB() {
+        return db;
+    }
+
     public SchemaLike getActiveSchema() {
         if(db == null) {
             return null;

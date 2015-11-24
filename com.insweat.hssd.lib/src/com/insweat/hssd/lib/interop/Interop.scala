@@ -16,6 +16,12 @@ object Interop {
     def tuple[A, B](a: A, b: B): (A, B) = (a, b)
     def tuple[A, B, C](a: A, b: B, c: C): (A, B, C) = (a, b, c)
     def tuple[A, B, C, D](a: A, b: B, c: C, d: D): (A, B, C, D) = (a, b, c, d)
+    
+    def list[T](): List[T] = List()
+    def list[T](a: T): List[T] = List(a)
+    def list[T](a: T, b: T): List[T] = List(a, b)
+    def list[T](a: T, b: T, c: T): List[T] = List(a, b, c)
+    def list[T](a: T, b: T, c: T, d: T): List[T] = List(a, b, c, d)
 
     def fn[T](f: Supplier[T]): Function0[T] = f.get
 

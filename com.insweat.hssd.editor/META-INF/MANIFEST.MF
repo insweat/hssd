@@ -6,6 +6,7 @@ Bundle-Version: 1.0.2
 Bundle-Activator: com.insweat.hssd.editor.Activator
 Bundle-Vendor: INSWEAT
 Require-Bundle: com.insweat.hssd.lib,
+ com.insweat.hssd.export,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.ui,
