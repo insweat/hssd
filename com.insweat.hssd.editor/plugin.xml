@@ -1212,5 +1212,17 @@
             parentId="com.insweat.hssd.editor.contexts.withHSSD">
       </context>
    </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="HSSD">
+         <property
+               name="windowImages"
+               value="icons/hssd.png">
+         </property>
+      </product>
+   </extension>
 
 </plugin>
