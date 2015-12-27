@@ -38,32 +38,32 @@ public class LogSupport {
     
     
     public void debugf(String fmt, Object ... args) {
-    	Logging.debugf(logger, fmt, args);
+    	Logging.debugf(getLogger(), fmt, args);
     }
 
     
     public void infof(String fmt, Object ... args) {
-    	Logging.infof(logger, fmt, args);
+    	Logging.infof(getLogger(), fmt, args);
     }
 
     
     public void noticef(String fmt, Object ... args) {
-    	Logging.noticef(logger, fmt, args);
+    	Logging.noticef(getLogger(), fmt, args);
     }
 
     
     public void warnf(String fmt, Object ... args) {
-    	Logging.warnf(logger, fmt, args);
+    	Logging.warnf(getLogger(), fmt, args);
     }
 
     
     public void errorf(String fmt, Object ... args) {
-    	Logging.errorf(logger, fmt, args);
+    	Logging.errorf(getLogger(), fmt, args);
     }
 
     
     public void criticalf(String fmt, Object ... args) {
-    	Logging.criticalf(logger, fmt, args);
+    	Logging.criticalf(getLogger(), fmt, args);
     }
 
     
