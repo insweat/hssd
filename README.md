@@ -3,10 +3,10 @@ An editor for Highly Structured Static Data.
 
 ### Status
 
- * Almost all editor features should work on Windows and Mac.
+ * All editor features should work on Windows and Mac.
  * The default ID allocator does not allocate ID. Take a look at [exec_id_alloc.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_id_alloc.demo) and implement your own. For example, you can have your `exec_id_alloc` to communicate with a SQL database.
  * The default code generator does not generate code. Take a look at [exec_code_gen.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_code_gen.demo) if you need it.
- * The default data exporter exports data in JSON (`entries.json`). That is not of much use in production. It is to show you how you can iterate over the entries and their value nodes so that you can implement your own exporter. An implementation can also be based on some transformation of the exported `entries.json` (say with [msgpack](http://msgpack.org)), but it would be a good optimization if values of each entry in `entries.json` were presented in a tree structure rather than in a flat one.
+ * The default data exporter reorganizes the input it gets from `HSSD` and stores the result in JSON (`entries.json`). It is to show you what the input format is rather than to emit useful data in production. Take a look at [exec_data_export.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_data_export.demo) to figure out how you can implement a really useful exporter. You can use a transformed version of `entries.json` (say with [msgpack](http://msgpack.org)), but it would be a good optimization if values of each entry in `entries.json` were presented in a tree structure rather than in a flat one.
  * The publish process is not well worked on. Currently, making a build requires a lot of interaction. See [Making Builds Manually](#MakingBuildsManually)
  * We need icon and spash screen of our own.
 
