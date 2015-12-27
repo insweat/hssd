@@ -34,25 +34,32 @@
 import sys
 import os.path
 
+# Use of this module is totally optional. It is here to better demonstrate
+# the format of input from the sys.stdin.
+import json
+
 PATH_OUTPUT = os.path.join(sys.path[0], "export", "entries.json")
 PATH_OUTPUT = os.path.normpath(os.path.abspath(PATH_OUTPUT))
 
+# In many implementations, esp. one that does not emit JSON, the output can be
+# generated entry by entry. You usually don't need to wait until all entries
+# are at hand to generate output like in this demo.
+entries = []
+entryLines = []
+for line in sys.stdin:
+    if not line.strip():
+        if entryLines:
+            entries.append(json.loads("".join(entryLines)))
+            entryLines = []
+    else:
+        entryLines.append(line)
+
+if entryLines:
+    entries.append(json.loads("".join(entryLines)))
+    entryLines = None
+
 with open(PATH_OUTPUT, "w") as f:
-    f.write("[\n")
-
-    wroteContent, needsComma = False, False
-    for line in sys.stdin:
-        if not line.strip():
-            needsComma = wroteContent
-        else:
-            if needsComma:
-                f.write(",\n")
-                needsComma = False
-
-            f.write(line)
-            wroteContent = True
-
-    f.write("]\n")
+    json.dump(entries, f, indent=4)
 
 sys.exit(0)
 

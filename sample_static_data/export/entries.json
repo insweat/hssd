@@ -1,30 +1,28 @@
 [
-{
-  "id": 200226,
-  "name": "test_sample_entry_0",
-  "values": {
-    "Root.Export.classNames": "TestHSSD",
-    "Root.Entry.isPublic": true,
-    "Root.Entry.tags.0": 200224.0
-  }
-}
-,
-{
-  "id": 200224,
-  "name": "test_tag_sample_0",
-  "values": {
-    "Root.Tag.singleton": false,
-    "Root.Export.classNames": "TestTag,TestHSSD",
-    "Root.Entry.isPublic": true
-  }
-}
-,
-{
-  "id": 200229,
-  "name": "test_sample_hidden",
-  "values": {
-    "Root.Export.classNames": "TestHSSD",
-    "Root.Entry.isPublic": true
-  }
-}
+    {
+        "values": {
+            "Root.Entry.tags.0": 200224.0, 
+            "Root.Entry.isPublic": true, 
+            "Root.Export.classNames": "TestHSSD"
+        }, 
+        "id": 200226, 
+        "name": "test_sample_entry_0"
+    }, 
+    {
+        "values": {
+            "Root.Entry.isPublic": true, 
+            "Root.Export.classNames": "TestTag,TestHSSD", 
+            "Root.Tag.singleton": false
+        }, 
+        "id": 200224, 
+        "name": "test_tag_sample_0"
+    }, 
+    {
+        "values": {
+            "Root.Entry.isPublic": true, 
+            "Root.Export.classNames": "TestHSSD"
+        }, 
+        "id": 200229, 
+        "name": "test_sample_hidden"
+    }
 ]
