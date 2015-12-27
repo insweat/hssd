@@ -21,24 +21,26 @@ class StopIterationException extends RuntimeException {
 public class HSSDEditorExportDB extends AbstractCommandHandler {
     
 	public Object execute(ExecutionEvent event) {
-        final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        if(!(editor.getEditorInput() instanceof IFileEditorInput)) {
-        	return null;
-        }
-        IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
-		final Object res = input.getFile();
+	        if(!(editor.getEditorInput() instanceof IFileEditorInput)) {
+	            return null;
+	        }
+	        IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
+	        final Object res = input.getFile();
 
-        final IWorkbenchPage activePage = Helper.getActiveWBPage();
-        if(activePage.saveAllEditors(true)) {
-            File loc = ((IFile)res).getLocation().toFile();
-            doExportDB(editor.getMasterCP().getDB(), loc.getParentFile());
-        }
+	        final IWorkbenchPage activePage = Helper.getActiveWBPage();
+	        if(activePage.saveAllEditors(true)) {
+	            File loc = ((IFile)res).getLocation().toFile();
+	            doExportDB(editor.getMasterCP().getDB(), loc.getParentFile());
+	        }
 
-	    return null;
+	        return null;
+	    });
 	}
 
     private void doExportDB(Database db, File parentLocation) {

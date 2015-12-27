@@ -18,28 +18,30 @@ public class HSSDEditorCopyName extends AbstractCommandHandler implements
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        List<EntryData> sel = getSelectedEntries(); 
-        String data;
-        if(sel.size() == 1) {
-        	data = sel.get(0).owner().name();
-        }
-        else {
-        	SpreadSheetTable table = new SpreadSheetTable();
-            for(EntryData ed: sel) {
-            	String id = String.valueOf(ed.entryID());
-            	String name = ed.owner().name();
-            	table.addRow(new String[]{id, name});
-            }
-            data = table.toString();
-        }
+	        List<EntryData> sel = getSelectedEntries(); 
+	        String data;
+	        if(sel.size() == 1) {
+	            data = sel.get(0).owner().name();
+	        }
+	        else {
+	            SpreadSheetTable table = new SpreadSheetTable();
+	            for(EntryData ed: sel) {
+	                String id = String.valueOf(ed.entryID());
+	                String name = ed.owner().name();
+	                table.addRow(new String[]{id, name});
+	            }
+	            data = table.toString();
+	        }
 
-        intoClipboard(editor, data);
-		return null;
+	        intoClipboard(editor, data);
+	        return null;
+	    });
 	}
 
 	@Override

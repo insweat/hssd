@@ -7,8 +7,7 @@ public class HSSDEditorSearchEntry extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        // TODO Auto-generated method stub
-        return null;
+        return watchedExecute(()->null);
     }
 
 }

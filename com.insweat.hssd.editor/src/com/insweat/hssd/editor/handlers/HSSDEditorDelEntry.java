@@ -21,54 +21,56 @@ public class HSSDEditorDelEntry extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
-        
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-        
-        final Shell shell = editor.getSite().getShell();
-        
-        final TreeNode[] nodes = Arrays.copyOf(
-                sel.toArray(), sel.size(), TreeNode[].class);
-        
-        if(!warnDataLoss(shell, nodes)) {
-            return null;
-        }
-
-        // Close any relevant entry editor
-        final HashSet<TreeNode> nodeSet = new HashSet<>();
-        for(TreeNode en: nodes) {
-            nodeSet.add(en);
-        }
-
-        EntryEditor.multiApply((e) -> {
-            final EditorInput input = (EditorInput)e.getEditorInput();
-            TreeNode en = input.getEntryNode();
-            while(en != null) {
-                if(nodeSet.contains(en)) {
-                    e.getSite().getPage().closeEditor(e, false);
-                    break;
-                }
-				en = Interop.or(en.parent());
+        return watchedExecute(()->{
+            final HSSDEditor editor = getActiveHSSDEditor();
+            if(editor == null) {
+                return null;
             }
-            return false;
-        }, null);
+            
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+            
+            final Shell shell = editor.getSite().getShell();
+            
+            final TreeNode[] nodes = Arrays.copyOf(
+                    sel.toArray(), sel.size(), TreeNode[].class);
+            
+            if(!warnDataLoss(shell, nodes)) {
+                return null;
+            }
 
-        // Removing entries
-        for(TreeNode en: nodes) {
-            en.owner().remove(en);
-        }
+            // Close any relevant entry editor
+            final HashSet<TreeNode> nodeSet = new HashSet<>();
+            for(TreeNode en: nodes) {
+                nodeSet.add(en);
+            }
 
-        editor.markDirty();
-        editor.refresh(null, false);
-        
-        // Make sure all references are updated
-        refreshAllEntryEditors();
-        
-        return null;
+            EntryEditor.multiApply((e) -> {
+                final EditorInput input = (EditorInput)e.getEditorInput();
+                TreeNode en = input.getEntryNode();
+                while(en != null) {
+                    if(nodeSet.contains(en)) {
+                        e.getSite().getPage().closeEditor(e, false);
+                        break;
+                    }
+                    en = Interop.or(en.parent());
+                }
+                return false;
+            }, null);
+
+            // Removing entries
+            for(TreeNode en: nodes) {
+                en.owner().remove(en);
+            }
+
+            editor.markDirty();
+            editor.refresh(null, false);
+            
+            // Make sure all references are updated
+            refreshAllEntryEditors();
+            
+            return null;
+        });
     }
 
     private boolean warnDataLoss(Shell shell, TreeNode ... nodes) {

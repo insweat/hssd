@@ -3,6 +3,7 @@ package com.insweat.hssd.editor.handlers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -117,4 +118,14 @@ abstract class AbstractCommandHandler extends AbstractHandler {
             clip.dispose();
         }
 	}
+	
+	protected Object watchedExecute(Supplier<Boolean> code) {
+	    try {
+	        return code.get(); 
+	    } catch (Exception e) {
+	        log.errorf("Failed to process event: %s", e.getMessage());
+	        throw e;
+	    }
+	}
+	
 }

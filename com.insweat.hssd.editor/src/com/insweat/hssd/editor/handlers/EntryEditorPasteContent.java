@@ -32,40 +32,42 @@ public class EntryEditorPasteContent extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final EntryEditor editor = getActiveEntryEditor();
-        if(editor == null) {
-        	return null;
-        }
-
-        String data = fromClipboard(editor);
-
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-
-        TreeNode selection = (TreeNode)sel.getFirstElement();
-        ValueData selectionVD = ValueData.of(selection);
-        Thype selThype = selectionVD.element().thype();
-        
-        try{
-            if(selThype instanceof CollectionThypeLike) {
-                selection = pasteCollection(editor, selection, data);
+        return watchedExecute(()->{
+            final EntryEditor editor = getActiveEntryEditor();
+            if(editor == null) {
+                return null;
             }
-            else if(selThype instanceof SimpleThypeLike) {
-                selection = pasteSimple(editor, selection, data);
-            }
-            else {
-            	ElementHelper.unsupportedThype(selThype);
-            }
-        }
-        catch (Exception e) {
-        	ElementHelper.panic(log, "pasting content", e);
-        	throw e;
-        }
-        
-        editor.refresh(selection, false);
-        editor.markDirty();
 
-        return null;
+            String data = fromClipboard(editor);
+
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+
+            TreeNode selection = (TreeNode)sel.getFirstElement();
+            ValueData selectionVD = ValueData.of(selection);
+            Thype selThype = selectionVD.element().thype();
+            
+            try{
+                if(selThype instanceof CollectionThypeLike) {
+                    selection = pasteCollection(editor, selection, data);
+                }
+                else if(selThype instanceof SimpleThypeLike) {
+                    selection = pasteSimple(editor, selection, data);
+                }
+                else {
+                    ElementHelper.unsupportedThype(selThype);
+                }
+            }
+            catch (Exception e) {
+                ElementHelper.panic(log, "pasting content", e);
+                throw e;
+            }
+            
+            editor.refresh(selection, false);
+            editor.markDirty();
+
+            return null; 
+        });
     }
     
     private TreeNode pasteSimple(EntryEditor editor, TreeNode sel, String data) {

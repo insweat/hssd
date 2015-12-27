@@ -1,1 +1,30 @@
-{"200226":{"Root.Export.classNames":"TestHSSD","Root.Entry.isPublic":true,"Root.Entry.tags.0":200224.0},"200224":{"Root.Tag.singleton":false,"Root.Export.classNames":"TestTag,TestHSSD","Root.Entry.isPublic":true},"200229":{"Root.Export.classNames":"TestHSSD","Root.Entry.isPublic":true}}
+[
+{
+  "id": 200226,
+  "name": "test_sample_entry_0",
+  "values": {
+    "Root.Export.classNames": "TestHSSD",
+    "Root.Entry.isPublic": true,
+    "Root.Entry.tags.0": 200224.0
+  }
+}
+,
+{
+  "id": 200224,
+  "name": "test_tag_sample_0",
+  "values": {
+    "Root.Tag.singleton": false,
+    "Root.Export.classNames": "TestTag,TestHSSD",
+    "Root.Entry.isPublic": true
+  }
+}
+,
+{
+  "id": 200229,
+  "name": "test_sample_hidden",
+  "values": {
+    "Root.Export.classNames": "TestHSSD",
+    "Root.Entry.isPublic": true
+  }
+}
+]

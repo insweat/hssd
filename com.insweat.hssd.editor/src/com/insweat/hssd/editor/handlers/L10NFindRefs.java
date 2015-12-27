@@ -18,33 +18,35 @@ public class L10NFindRefs extends AbstractCommandHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		L10NView view = getL10NView();
-		if(view == null) {
-			return null;
-		}
-		
-		ISelectionProvider sp = view.getSite().getSelectionProvider();
-		IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-		Row row = (Row)sel.getFirstElement();
-		
-		EntrySearch.Pattern pat = new EntrySearch.Pattern(
-				String.valueOf(row.cols[0]), false, false);
-		Set<EntrySearch.Objective> objs = new HashSet<>();
-		objs.add(EntrySearch.Objective.LSTR_REF);
-		EntrySearch.Constraint cons = new EntrySearch.Constraint(false, null);
-		EntrySearchQuery query = new EntrySearchQuery(pat, objs, cons);
-        try {
-            if(query.canRunInBackground()) {
-                NewSearchUI.runQueryInBackground(query);
-            }
-            else {
-                NewSearchUI.runQueryInForeground(null, query);
-            }
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-		return null;
+	    return watchedExecute(()->{
+	        L10NView view = getL10NView();
+	        if(view == null) {
+	            return null;
+	        }
+	        
+	        ISelectionProvider sp = view.getSite().getSelectionProvider();
+	        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+	        Row row = (Row)sel.getFirstElement();
+	        
+	        EntrySearch.Pattern pat = new EntrySearch.Pattern(
+	                String.valueOf(row.cols[0]), false, false);
+	        Set<EntrySearch.Objective> objs = new HashSet<>();
+	        objs.add(EntrySearch.Objective.LSTR_REF);
+	        EntrySearch.Constraint cons = new EntrySearch.Constraint(false, null);
+	        EntrySearchQuery query = new EntrySearchQuery(pat, objs, cons);
+	        try {
+	            if(query.canRunInBackground()) {
+	                NewSearchUI.runQueryInBackground(query);
+	            }
+	            else {
+	                NewSearchUI.runQueryInForeground(null, query);
+	            }
+	        }
+	        catch (Exception e) {
+	            throw new RuntimeException(e);
+	        }
+	        return null;
+	    });
 	}
 
 }

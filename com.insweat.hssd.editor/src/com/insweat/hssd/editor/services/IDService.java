@@ -63,22 +63,24 @@ public class IDService {
             throw new RuntimeException(String.format(err, EXEC_NAME));
         }
         
-        Subprocess sp = new Subprocess(
-            Runtime.getRuntime().exec(new String[]{
-              execIDAlloc.get().getAbsolutePath(),
-              ns,
-              String.valueOf(n)
-            })
-        );
+        Subprocess sp = Subprocess.create(new String[]{
+            execIDAlloc.get().getAbsolutePath(), ns, String.valueOf(n)
+        });
         
-        Tuple2<String, String> rv = sp.communicate(Interop.none());
-        
-        if(0 != sp.proc().exitValue()) {
-            throw new RuntimeException(S.fmt(
-                    "%s: %s", EXEC_NAME, rv._2()));
+        try {
+            Tuple2<String, String> rv = sp.communicate(Interop.none());
+            
+            if(0 != sp.proc().exitValue()) {
+                throw new RuntimeException(S.fmt(
+                        "%s: %s", EXEC_NAME, rv._2()));
+            }
+
+            return Long.parseLong(rv._1());
+        } finally {
+            if(sp.proc().isAlive()) {
+                sp.proc().destroyForcibly();
+            }
         }
-        
-        return Long.parseLong(rv._1());
     }
 
     private long die(String fmt, Object ... args) throws RuntimeException {

@@ -30,31 +30,33 @@ public class EntryEditorCopyContent extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final EntryEditor editor = getActiveEntryEditor();
-        if(editor == null) {
-        	return null;
-        }
-        
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-        
-        TreeNode selection = (TreeNode)sel.getFirstElement();
-        ValueData selectionVD = ValueData.of(selection);
-        
-        final Thype selThype = selectionVD.element().thype();
-        if(selThype instanceof CollectionThypeLike) {
-            String data = parseCollection(selection);
-            intoClipboard(editor, data);
-        }
-        else if(selThype instanceof SimpleThypeLike) {
-            String data = parseSimple(selection);
-            intoClipboard(editor, data);
-        }
-        else {
-        	ElementHelper.unsupportedThype(selThype);
-        }
+        return watchedExecute(()-> {
+            final EntryEditor editor = getActiveEntryEditor();
+            if(editor == null) {
+                return null;
+            }
+            
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+            
+            TreeNode selection = (TreeNode)sel.getFirstElement();
+            ValueData selectionVD = ValueData.of(selection);
+            
+            final Thype selThype = selectionVD.element().thype();
+            if(selThype instanceof CollectionThypeLike) {
+                String data = parseCollection(selection);
+                intoClipboard(editor, data);
+            }
+            else if(selThype instanceof SimpleThypeLike) {
+                String data = parseSimple(selection);
+                intoClipboard(editor, data);
+            }
+            else {
+                ElementHelper.unsupportedThype(selThype);
+            }
 
-        return null;
+            return null;
+        });
     }
     
     private String parseSimple(TreeNode sel) {

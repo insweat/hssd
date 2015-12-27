@@ -15,24 +15,26 @@ import com.insweat.hssd.lib.essence.Database;
 public class HSSDEditorExportDBData extends AbstractCommandHandler {
     
 	public Object execute(ExecutionEvent event) {
-        final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
+	    return watchedExecute(() -> {
+            final HSSDEditor editor = getActiveHSSDEditor();
+            if(editor == null) {
+                return null;
+            }
+
+            if(!(editor.getEditorInput() instanceof IFileEditorInput)) {
+                return null;
+            }
+            IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
+            final Object res = input.getFile();
+
+            final IWorkbenchPage activePage = Helper.getActiveWBPage();
+            if(activePage.saveAllEditors(true)) {
+                File loc = ((IFile)res).getLocation().toFile();
+                doExportDBData(editor.getMasterCP().getDB(), loc.getParentFile());
+            }
+
             return null;
-        }
-
-        if(!(editor.getEditorInput() instanceof IFileEditorInput)) {
-        	return null;
-        }
-        IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
-		final Object res = input.getFile();
-
-        final IWorkbenchPage activePage = Helper.getActiveWBPage();
-        if(activePage.saveAllEditors(true)) {
-            File loc = ((IFile)res).getLocation().toFile();
-            doExportDBData(editor.getMasterCP().getDB(), loc.getParentFile());
-        }
-
-	    return null;
+	    });
 	}
 
     private void doExportDBData(Database db, File parentLocation) {

@@ -16,16 +16,18 @@ public class HSSDEditorCopyID extends AbstractCommandHandler implements
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        EntryData ed = getSelectedEntry();
-        String data = String.valueOf(ed.entryID());
+	        EntryData ed = getSelectedEntry();
+	        String data = String.valueOf(ed.entryID());
 
-        intoClipboard(editor, data);
-		return null;
+	        intoClipboard(editor, data);
+	        return null;
+	    });
 	}
 
 	@Override

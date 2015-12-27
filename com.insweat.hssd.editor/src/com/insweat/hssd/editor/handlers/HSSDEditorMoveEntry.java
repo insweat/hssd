@@ -27,132 +27,134 @@ public class HSSDEditorMoveEntry extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        String source = event.getParameter("source");
-        String target = event.getParameter("target");
+        return watchedExecute(()->{
+            String source = event.getParameter("source");
+            String target = event.getParameter("target");
 
-        HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+            HSSDEditor editor = getActiveHSSDEditor();
+            if(editor == null) {
+                return null;
+            }
 
-        EntryTree tree = editor.getMasterCP().getEntryTree();
+            EntryTree tree = editor.getMasterCP().getEntryTree();
 
-        final TreeNode tgt;
-        try {
-            int entryId = Integer.parseInt(target);
-            tgt = tree.nodesByID().get(entryId).get();
-        }
-        catch (Exception e) {
-            log.errorf("Invalid target: %s", target);
-            return null;
-        }
-
-        boolean movingLeaf = false;
-        TreeNode srcParent = null;
-        String[] srcEntryIDs = source.split(",");
-        final TreeNode[] srcs = new TreeNode[srcEntryIDs.length];
-        for(int i = 0; i < srcEntryIDs.length; ++i) {
+            final TreeNode tgt;
             try {
-                int entryId = Integer.parseInt(srcEntryIDs[i]);
-                srcs[i] = tree.nodesByID().get(entryId).get();
+                int entryId = Integer.parseInt(target);
+                tgt = tree.nodesByID().get(entryId).get();
             }
             catch (Exception e) {
-                log.errorf("Invalid source: %s", srcEntryIDs[i]);
+                log.errorf("Invalid target: %s", target);
                 return null;
             }
 
-            if(srcs[i] == tgt) {
-                log.errorf("Cannot move %s into itself", srcs[i]);
-                return null;
-            }
-
-            if(srcs[i].owner() != tgt.owner()) {
-                log.errorf("%s and %s do not belong to the same entry tree",
-                        srcs[i], tgt);
-                return null;
-            }
-
-            if(tgt.isLeaf()) {
-                log.errorf("Cannot move %s into a leaf %s", srcs[i], tgt);
-                return null;
-            }
-            
-            if(tgt.childNodes().get(srcs[i].name()).isDefined()) {
-                log.errorf("A child named %s already exists under %s",
-                        srcs[i].name(), tgt);
-                return null;
-            }
-
-            for(Option<TreeNode> node = tgt.parent();
-                    node.isDefined();
-                    node = node.get().parent()) {
-                if(node.get() == srcs[i]) {
-                    log.errorf("Cannot move %s into a descendant %s", srcs[i], tgt);
+            boolean movingLeaf = false;
+            TreeNode srcParent = null;
+            String[] srcEntryIDs = source.split(",");
+            final TreeNode[] srcs = new TreeNode[srcEntryIDs.length];
+            for(int i = 0; i < srcEntryIDs.length; ++i) {
+                try {
+                    int entryId = Integer.parseInt(srcEntryIDs[i]);
+                    srcs[i] = tree.nodesByID().get(entryId).get();
+                }
+                catch (Exception e) {
+                    log.errorf("Invalid source: %s", srcEntryIDs[i]);
                     return null;
                 }
-            }
 
-            // srcs[i].parent must have been isDefined because it != root,
-            // because tgt is a descendant of root.
-            TreeNode sp = srcs[i].parent().get();
-            if(srcParent == null) {
-            	srcParent = sp;
+                if(srcs[i] == tgt) {
+                    log.errorf("Cannot move %s into itself", srcs[i]);
+                    return null;
+                }
+
+                if(srcs[i].owner() != tgt.owner()) {
+                    log.errorf("%s and %s do not belong to the same entry tree",
+                            srcs[i], tgt);
+                    return null;
+                }
+
+                if(tgt.isLeaf()) {
+                    log.errorf("Cannot move %s into a leaf %s", srcs[i], tgt);
+                    return null;
+                }
+                
+                if(tgt.childNodes().get(srcs[i].name()).isDefined()) {
+                    log.errorf("A child named %s already exists under %s",
+                            srcs[i].name(), tgt);
+                    return null;
+                }
+
+                for(Option<TreeNode> node = tgt.parent();
+                        node.isDefined();
+                        node = node.get().parent()) {
+                    if(node.get() == srcs[i]) {
+                        log.errorf("Cannot move %s into a descendant %s", srcs[i], tgt);
+                        return null;
+                    }
+                }
+
+                // srcs[i].parent must have been isDefined because it != root,
+                // because tgt is a descendant of root.
+                TreeNode sp = srcs[i].parent().get();
+                if(srcParent == null) {
+                    srcParent = sp;
+                }
+                else if(srcParent != sp) {
+                    log.errorf("Cannot move nodes under different parents.");
+                    return null;
+                }
+                
+                if(srcs[i].isLeaf()) {
+                    movingLeaf = true;
+                }
             }
-            else if(srcParent != sp) {
-                log.errorf("Cannot move nodes under different parents.");
+            
+            if(srcs.length == 0) {
+                log.errorf("Nothing to move.");
                 return null;
             }
             
-            if(srcs[i].isLeaf()) {
-            	movingLeaf = true;
+            final Shell shell = editor.getSite().getShell();
+            if(!warnMoveEntry(shell, source, tgt)) {
+                return null;
             }
-        }
-        
-        if(srcs.length == 0) {
-            log.errorf("Nothing to move.");
-            return null;
-        }
-        
-        final Shell shell = editor.getSite().getShell();
-        if(!warnMoveEntry(shell, source, tgt)) {
-            return null;
-        }
 
 
-        Set<String> addingTraits = new HashSet<>();
-        Set<TraitThypeLike> desiredTraits = new HashSet<>();
-        EntryData tgtEd = EntryData.of(tgt);
-        Interop.foreach(tgtEd.traits(), tr -> {
-            desiredTraits.add(tr); 
-        });
+            Set<String> addingTraits = new HashSet<>();
+            Set<TraitThypeLike> desiredTraits = new HashSet<>();
+            EntryData tgtEd = EntryData.of(tgt);
+            Interop.foreach(tgtEd.traits(), tr -> {
+                desiredTraits.add(tr); 
+            });
 
-        EntryData srcEd = EntryData.of(srcs[0]);
-        Interop.foreach(srcEd.traits(), tr -> {
-            if(desiredTraits.add(tr)) {
-                Thype t = (Thype)tr;
-                addingTraits.add(t.name());
+            EntryData srcEd = EntryData.of(srcs[0]);
+            Interop.foreach(srcEd.traits(), tr -> {
+                if(desiredTraits.add(tr)) {
+                    Thype t = (Thype)tr;
+                    addingTraits.add(t.name());
+                }
+            });
+
+            if(addingTraits.isEmpty()) {
+                desiredTraits.clear();
             }
-        });
+            else if(movingLeaf && !warnAddingTraits(shell, tgt, addingTraits)) {
+                return null;
+            }
+            
+            move(tree, srcs, tgt, movingLeaf, desiredTraits);
 
-        if(addingTraits.isEmpty()) {
-        	desiredTraits.clear();
-        }
-        else if(movingLeaf && !warnAddingTraits(shell, tgt, addingTraits)) {
+            if(!srcParent.hasParent()) {
+                srcParent = null;
+            }
+            editor.markDirty();
+            editor.refresh(srcParent, false);
+            editor.refresh(tgt, true);
+
+            refreshAllEntryEditors();
+
             return null;
-        }
-        
-        move(tree, srcs, tgt, movingLeaf, desiredTraits);
-
-        if(!srcParent.hasParent()) {
-        	srcParent = null;
-        }
-        editor.markDirty();
-        editor.refresh(srcParent, false);
-        editor.refresh(tgt, true);
-
-        refreshAllEntryEditors();
-
-        return null;
+        });
     }
     
     private void move(EntryTree tree,

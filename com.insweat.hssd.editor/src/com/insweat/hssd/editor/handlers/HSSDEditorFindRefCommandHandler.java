@@ -18,33 +18,35 @@ public abstract class HSSDEditorFindRefCommandHandler
 		extends AbstractCommandHandler {
 
 	public Object doExecute(ExecutionEvent event, EntrySearch.Objective obj) {
-        final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-        TreeNode ref = (TreeNode)sel.getFirstElement();
-        EntryData ed = EntryData.of(ref);
+	        ISelectionProvider sp = editor.getSite().getSelectionProvider();
+	        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+	        TreeNode ref = (TreeNode)sel.getFirstElement();
+	        EntryData ed = EntryData.of(ref);
 
-		EntrySearch.Pattern pat = new EntrySearch.Pattern(
-				String.valueOf(ed.entryID()), false, false);
-		Set<EntrySearch.Objective> objs = new HashSet<>();
-		objs.add(obj);
-		EntrySearch.Constraint cons = new EntrySearch.Constraint(false, null);
-		EntrySearchQuery query = new EntrySearchQuery(pat, objs, cons);
-        try {
-            if(query.canRunInBackground()) {
-                NewSearchUI.runQueryInBackground(query);
-            }
-            else {
-                NewSearchUI.runQueryInForeground(null, query);
-            }
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-		return null;
+	        EntrySearch.Pattern pat = new EntrySearch.Pattern(
+	                String.valueOf(ed.entryID()), false, false);
+	        Set<EntrySearch.Objective> objs = new HashSet<>();
+	        objs.add(obj);
+	        EntrySearch.Constraint cons = new EntrySearch.Constraint(false, null);
+	        EntrySearchQuery query = new EntrySearchQuery(pat, objs, cons);
+	        try {
+	            if(query.canRunInBackground()) {
+	                NewSearchUI.runQueryInBackground(query);
+	            }
+	            else {
+	                NewSearchUI.runQueryInForeground(null, query);
+	            }
+	        }
+	        catch (Exception e) {
+	            throw new RuntimeException(e);
+	        }
+	        return null;
+	    });
 	}
 }

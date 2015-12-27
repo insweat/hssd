@@ -19,36 +19,38 @@ public class HSSDEditorRenameEntry extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
-        
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-        TreeNode en = (TreeNode)sel.getFirstElement();
-        
-        final Shell shell = editor.getSite().getShell();
-        final String newName = inputNewName(shell, en);
-        if(newName != null) {
-            en.owner().rename(en, newName);
-            editor.update(en);
-            editor.markDirty();
-            EntryData.of(en).markDirty();
+        return watchedExecute(()->{
+            HSSDEditor editor = getActiveHSSDEditor();
+            if(editor == null) {
+                return null;
+            }
             
-            // Make sure all references are updated.
-            refreshAllEntryEditors();
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+            TreeNode en = (TreeNode)sel.getFirstElement();
             
-            EntryEditor.multiApply((e) -> {
-                final EditorInput input = (EditorInput)e.getEditorInput(); 
-                if(en.equals(input.getEntryNode())){
-                    e.updateTitle();
-                }
-                return false;
-            }, null);
-        }
-        
-        return null;
+            final Shell shell = editor.getSite().getShell();
+            final String newName = inputNewName(shell, en);
+            if(newName != null) {
+                en.owner().rename(en, newName);
+                editor.update(en);
+                editor.markDirty();
+                EntryData.of(en).markDirty();
+                
+                // Make sure all references are updated.
+                refreshAllEntryEditors();
+                
+                EntryEditor.multiApply((e) -> {
+                    final EditorInput input = (EditorInput)e.getEditorInput(); 
+                    if(en.equals(input.getEntryNode())){
+                        e.updateTitle();
+                    }
+                    return false;
+                }, null);
+            }
+            
+            return null; 
+        });
     }
 
     private String inputNewName(Shell shell, TreeNode node) {

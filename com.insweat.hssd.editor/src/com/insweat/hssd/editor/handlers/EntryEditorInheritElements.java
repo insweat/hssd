@@ -13,25 +13,27 @@ public class EntryEditorInheritElements extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final EntryEditor editor = getActiveEntryEditor();
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-        TreeNode parent = (TreeNode)sel.getFirstElement();
+        return watchedExecute(()->{
+            final EntryEditor editor = getActiveEntryEditor();
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+            TreeNode parent = (TreeNode)sel.getFirstElement();
 
-        ValueData parentVD = ValueData.of(parent);
-        if(!parentVD.valueTree().isOverridden(parent.path())) {
-        	return null;
-        }
+            ValueData parentVD = ValueData.of(parent);
+            if(!parentVD.valueTree().isOverridden(parent.path())) {
+                return null;
+            }
 
-        if(parent.childCount() > 0 &&
-        		!ElementHelper.warnRemoveElements(parent, editor)) {
-        	return null;
-        }
-        ElementHelper.removeChildren(parent, true);
+            if(parent.childCount() > 0 &&
+                    !ElementHelper.warnRemoveElements(parent, editor)) {
+                return null;
+            }
+            ElementHelper.removeChildren(parent, true);
 
-        editor.refresh(parent, true);
-        editor.markDirty();
-        return null;
+            editor.refresh(parent, true);
+            editor.markDirty();
+            return null;
+        });
     }
 
 }

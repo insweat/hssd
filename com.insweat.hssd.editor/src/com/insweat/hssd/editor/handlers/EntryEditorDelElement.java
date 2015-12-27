@@ -25,69 +25,75 @@ public class EntryEditorDelElement extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final EntryEditor editor = getActiveEntryEditor();
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+        return watchedExecute(() -> {
+            final EntryEditor editor = getActiveEntryEditor();
+            if(editor == null) {
+                return null;
+            }
 
-        TreeNode node = (TreeNode)sel.getFirstElement();
-        final List<TreePath> paths = new ArrayList<>(sel.size());
-        for(Iterator<?> itr = sel.iterator(); itr.hasNext();){
-            TreeNode vn = (TreeNode)itr.next();
-            paths.add(vn.path());
-        }
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
 
-        if(!ElementHelper.warnRemoveElements(node.parent().get(), editor)) {
-        	return null;
-        }
+            TreeNode node = (TreeNode)sel.getFirstElement();
+            final List<TreePath> paths = new ArrayList<>(sel.size());
+            for(Iterator<?> itr = sel.iterator(); itr.hasNext();){
+                TreeNode vn = (TreeNode)itr.next();
+                paths.add(vn.path());
+            }
 
-        final TreeNode parent = ElementHelper.copyOnNeed(
-                node.parent().get(), editor);
-        if(parent == null) {
-            return null;
-        }
+            if(!ElementHelper.warnRemoveElements(node.parent().get(), editor)) {
+                return null;
+            }
 
-        final ValueData parentVD = ValueData.of(parent);
-        final ValueTree tree = (ValueTree)parent.owner();
+            final TreeNode parent = ElementHelper.copyOnNeed(
+                    node.parent().get(), editor);
+            if(parent == null) {
+                return null;
+            }
 
-        final CollectionThypeLike parentThype = 
-                (CollectionThypeLike)parentVD.element().thype();
+            final ValueData parentVD = ValueData.of(parent);
+            final ValueTree tree = (ValueTree)parent.owner();
 
-        for(TreePath path: paths) {
-            node = tree.find(path).get();
-            tree.remove(node);
-        }
+            final CollectionThypeLike parentThype = 
+                    (CollectionThypeLike)parentVD.element().thype();
 
-        // NB TreeViewer internally uses a hash table to sync up UI widgets and
-        //    content elements. If we process renaming first, then the process
-        //    will be confused because the old UI widget which references the
-        //    old node has the same path as the one renamed to the old name.
-        editor.refresh(parent, true);
+            for(TreePath path: paths) {
+                node = tree.find(path).get();
+                tree.remove(node);
+            }
 
-        if(parentThype instanceof ArrayThype) {
-            final TreeNode[] siblings = (TreeNode[])Interop.toArray(
-                    parent.children(), TreeNode.class);
-            Arrays.sort(siblings, new Comparator<TreeNode>() {
-            	private final Comparator<String> cmp = new IntAwareCmp();
+            // NB TreeViewer internally uses a hash table to sync up UI widgets and
+            //    content elements. If we process renaming first, then the process
+            //    will be confused because the old UI widget which references the
+            //    old node has the same path as the one renamed to the old name.
+            editor.refresh(parent, true);
 
-                @Override
-                public int compare(TreeNode o1, TreeNode o2) {
-                	return cmp.compare(o1.name(), o2.name());
-                }
-            });
+            if(parentThype instanceof ArrayThype) {
+                final TreeNode[] siblings = (TreeNode[])Interop.toArray(
+                        parent.children(), TreeNode.class);
+                Arrays.sort(siblings, new Comparator<TreeNode>() {
+                    private final Comparator<String> cmp = new IntAwareCmp();
 
-            for(int i = 0; i < siblings.length; ++i) {
-                final String index = String.valueOf(i);
-                if(!siblings[i].name().equals(index)) {
-                    tree.rename(siblings[i], index);
+                    @Override
+                    public int compare(TreeNode o1, TreeNode o2) {
+                        return cmp.compare(o1.name(), o2.name());
+                    }
+                });
 
-                    // Since we already handled structural changes above, we
-                    // need to update the label when one changes.
-                    editor.update(siblings[i]);
+                for(int i = 0; i < siblings.length; ++i) {
+                    final String index = String.valueOf(i);
+                    if(!siblings[i].name().equals(index)) {
+                        tree.rename(siblings[i], index);
+
+                        // Since we already handled structural changes above, we
+                        // need to update the label when one changes.
+                        editor.update(siblings[i]);
+                    }
                 }
             }
-        }
 
-        editor.markDirty();
-        return null;
+            editor.markDirty();
+            return null;
+        });
     }
 }

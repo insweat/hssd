@@ -43,38 +43,40 @@ public class HSSDEditorImportSS extends AbstractCommandHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final HSSDEditor editor = Helper.getLastHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = Helper.getLastHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        EntryTree et = editor.getMasterCP().getEntryTree();
-        
-        CommonNavigator nc = Helper.findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
+	        EntryTree et = editor.getMasterCP().getEntryTree();
+	        
+	        CommonNavigator nc = Helper.findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
 
-        IStructuredSelection sel = (IStructuredSelection)nc.getSite().getSelectionProvider().getSelection();
-        IFile file = (IFile)sel.getFirstElement();
-        Workbook wb = null;
-        try {
-        	wb = WorkbookFactory.create(file.getLocation().toFile());
-        	$$import(wb, et);
-        }
-        catch(Exception e) {
-        	log.errorf("Failed to import %s: %s", file, e);
-        	throw new RuntimeException(e);
-        }
-        finally {
-        	try {
-                wb.close();
-        	}
-        	catch(Exception e) {
-        		log.warnf("Failed to close workbook: %s", e);
-        	}
-        }
+	        IStructuredSelection sel = (IStructuredSelection)nc.getSite().getSelectionProvider().getSelection();
+	        IFile file = (IFile)sel.getFirstElement();
+	        Workbook wb = null;
+	        try {
+	            wb = WorkbookFactory.create(file.getLocation().toFile());
+	            $$import(wb, et);
+	        }
+	        catch(Exception e) {
+	            log.errorf("Failed to import %s: %s", file, e);
+	            throw new RuntimeException(e);
+	        }
+	        finally {
+	            try {
+	                wb.close();
+	            }
+	            catch(Exception e) {
+	                log.warnf("Failed to close workbook: %s", e);
+	            }
+	        }
 
-        editor.refresh(null, false);
-        editor.markDirty();
-		return null;
+	        editor.refresh(null, false);
+	        editor.markDirty();
+	        return null;
+	    });
 	}
 	
 	private void $$import(Workbook wb, EntryTree et) {

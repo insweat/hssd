@@ -10,12 +10,14 @@ public class HSSDEditorStopFileServer extends AbstractCommandHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		HSSDEditor editor = Helper.getLastHSSDEditor();
-		if(editor == null) {
-			return null;
-		}
-		editor.flipFileServer(false);
-		return null;
+	    return watchedExecute(()->{
+	        HSSDEditor editor = Helper.getLastHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
+	        editor.flipFileServer(false);
+	        return null;
+	    });
 	}
 
 }

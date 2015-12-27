@@ -112,45 +112,47 @@ public class HSSDEditorExportSS extends AbstractCommandHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        EntryData ed = getSelectedEntry();
-        IFileEditorInput fei = (IFileEditorInput)editor.getEditorInput(); 
-        File folder = fei.getFile().getLocation().toFile().getParentFile();
-        FileOutputStream fos = null;
-        WBContext context = new WBContext(new XSSFWorkbook());
-        try {
-        	$$export(context, null, ed);
-        	exportHierarchy(context, ed);
+	        EntryData ed = getSelectedEntry();
+	        IFileEditorInput fei = (IFileEditorInput)editor.getEditorInput(); 
+	        File folder = fei.getFile().getLocation().toFile().getParentFile();
+	        FileOutputStream fos = null;
+	        WBContext context = new WBContext(new XSSFWorkbook());
+	        try {
+	            $$export(context, null, ed);
+	            exportHierarchy(context, ed);
 
-            String name = SSHelper.mkWorkbookName(ed, "xlsx");
-            fos = new FileOutputStream(new File(folder, name));
-            context.wb.write(fos);
-        }
-        catch(Exception e) {
-        	log.errorf("Failed to export %s: %s", ed.entryID(), e);
-        	throw new RuntimeException(e);
-        }
-        finally {
-            if(fos != null) {
-                try {
-                    fos.close();
-                }
-                catch(Exception e) {
-                    log.warnf("Failed to close file: %s", e);
-                }
-            }
-        	try {
-                context.close();
-        	}
-        	catch(Exception e) {
-        		log.warnf("Failed to close workbook: %s", e);
-        	}
-        }
-		return null;
+	            String name = SSHelper.mkWorkbookName(ed, "xlsx");
+	            fos = new FileOutputStream(new File(folder, name));
+	            context.wb.write(fos);
+	        }
+	        catch(Exception e) {
+	            log.errorf("Failed to export %s: %s", ed.entryID(), e);
+	            throw new RuntimeException(e);
+	        }
+	        finally {
+	            if(fos != null) {
+	                try {
+	                    fos.close();
+	                }
+	                catch(Exception e) {
+	                    log.warnf("Failed to close file: %s", e);
+	                }
+	            }
+	            try {
+	                context.close();
+	            }
+	            catch(Exception e) {
+	                log.warnf("Failed to close workbook: %s", e);
+	            }
+	        }
+	        return null;
+	    });
 	}
 
 	private void exportHierarchy(WBContext context, EntryData ed) {

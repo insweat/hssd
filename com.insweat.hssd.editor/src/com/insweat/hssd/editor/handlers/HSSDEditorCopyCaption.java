@@ -16,15 +16,17 @@ public class HSSDEditorCopyCaption extends AbstractCommandHandler implements
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        if(editor == null) {
+	            return null;
+	        }
 
-        String data = String.valueOf(getSelectionCaption());
-        intoClipboard(editor, data);
+	        String data = String.valueOf(getSelectionCaption());
+	        intoClipboard(editor, data);
 
-		return null;
+	        return null;
+	    });
 	}
 
 	@Override

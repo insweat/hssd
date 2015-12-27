@@ -1,0 +1,58 @@
+#! /usr/bin/env python
+
+# This routine is used by HSSD to export data.
+# 
+# It MUST be placed under the root of the HSSD project, and named
+#   exec_data_export<ext>
+# where <ext> can be one of
+#   "", ".sh", ".py", ".exe", ".cmd", ".bat" or ".demo"
+# (HSSD uses the first existence in this order).
+# You can implement it in the way you feel most convenient, as long as it is
+# eXecutable.
+#
+# The implementation MUST take no arguments, and read entries from the stdin.
+# Each entry is a JSON object like this:
+# {
+#     "id": 200226,
+#     "name": "test_sample_entry_0",
+#     "values": {
+#         "Root.Export.classNames":"TestHSSD",
+#   	      "Root.Entry.isPublic":true,
+#   	      "Root.Entry.tags.0":200224.0
+#   }
+# }
+# An empty line is guaranteed to be inserted between two successive entries.
+#
+# On success, the implementation MUST exit with 0.
+# On failure, the implementation MUST emit the error message to STDERR, and 
+# exit with non-zero. 
+#
+# See:
+#   com.insweat.hssd.export/src/com/insweat/hssd/export/Exporter.java
+
+# By default, we generate 'export/entries.json' with the input.
+import sys
+import os.path
+
+PATH_OUTPUT = os.path.join(sys.path[0], "export", "entries.json")
+PATH_OUTPUT = os.path.normpath(os.path.abspath(PATH_OUTPUT))
+
+with open(PATH_OUTPUT, "w") as f:
+    f.write("[\n")
+
+    wroteContent, needsComma = False, False
+    for line in sys.stdin:
+        if not line.strip():
+            needsComma = wroteContent
+        else:
+            if needsComma:
+                f.write(",\n")
+                needsComma = False
+
+            f.write(line)
+            wroteContent = True
+
+    f.write("]\n")
+
+sys.exit(0)
+

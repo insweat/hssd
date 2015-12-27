@@ -1,19 +1,15 @@
 package com.insweat.hssd.export;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.insweat.hssd.lib.essence.Database;
 import com.insweat.hssd.lib.essence.EntryData;
+import com.insweat.hssd.lib.essence.ValExpr;
 import com.insweat.hssd.lib.essence.ValueData;
 import com.insweat.hssd.lib.interop.EssenceHelper;
 import com.insweat.hssd.lib.interop.Interop;
@@ -26,7 +22,8 @@ import scala.Option;
 import scala.Tuple2;
 
 public class Exporter {
-    private final String EXEC_NAME = "exec_code_gen";
+    private final String EXEC_NAME_CODE_GEN = "exec_code_gen";
+    private final String EXEC_NAME_DATA_EXPORT = "exec_data_export";
 
     public final Logger log = Logging.getChild(
             Logging.getRoot(),
@@ -52,98 +49,99 @@ public class Exporter {
 	    verifyParentLocation(parentLocation);
 	    
         Option<File> execCodeGen = Subprocess.findExecutable(
-                parentLocation, EXEC_NAME);
+                parentLocation, EXEC_NAME_CODE_GEN);
         
         if(!execCodeGen.isDefined()) {
             String err = "The %s[.*] is missing or not executable.";
-            throw new RuntimeException(String.format(err, EXEC_NAME));
+            throw new RuntimeException(String.format(err, EXEC_NAME_CODE_GEN));
         }
 
-        Subprocess sp = null;
+        Subprocess sp = Subprocess.create(new String[]{
+                execCodeGen.get().getAbsolutePath()});
+        
         try {
-            sp = new Subprocess(
-                Runtime.getRuntime().exec(new String[]{
-                  execCodeGen.get().getAbsolutePath()
-                })
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            Tuple2<String, String> rv = sp.communicate(Interop.none());
+            
+            if(0 != sp.proc().exitValue()) {
+                throw new RuntimeException(String.format(
+                        "%s: %s", EXEC_NAME_CODE_GEN, rv._2()));
+            }
+            
+            exportDBData(db, parentLocation);
+        } finally {
+            if(sp.proc().isAlive()) {
+                sp.proc().destroyForcibly();
+            }
         }
-        
-        Tuple2<String, String> rv = sp.communicate(Interop.none());
-        
-        if(0 != sp.proc().exitValue()) {
-            throw new RuntimeException(String.format(
-                    "%s: %s", EXEC_NAME, rv._2()));
-        }
-	    
-	    exportDBData(db, parentLocation);
 	}
 
 	public void exportDBData(Database db, File parentLocation) {
 	    verifyParentLocation(parentLocation);
 
-	    EntryTree et = db.entries();
-	    Map<Integer, List<ValueData>> values = new HashMap<>();
-	    boolean[] containsError = new boolean[]{false};
-        EssenceHelper.foreach(et, en -> {
-            if(!en.isLeaf()) {
-                return;
-            }
-            
-            List<ValueData> vds = new ArrayList<>();
-            EntryData ed = EntryData.of(en);
-            EssenceHelper.foreach(ed, vn -> {
-                ValueData vd = ValueData.of(vn);
-                if(vd.value().isError()) {
-                    String err = "Value contains error %s:%s.";
-                    Logging.errorf(log, err, en, vd.path());
-                    containsError[0] = true;
+        Option<File> execDataExport = Subprocess.findExecutable(
+                parentLocation, EXEC_NAME_DATA_EXPORT);
+        
+        if(!execDataExport.isDefined()) {
+            String err = "The %s[.*] is missing or not executable.";
+            throw new RuntimeException(String.format(err, EXEC_NAME_DATA_EXPORT));
+        }
+
+        Subprocess sp = Subprocess.create(new String[]{
+                execDataExport.get().getAbsolutePath()});
+
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            StringBuilder input = new StringBuilder();
+
+            EntryTree et = db.entries();
+            boolean[] containsError = new boolean[]{false};
+            EssenceHelper.foreach(et, en -> {
+                if(!en.isLeaf()) {
+                    return;
                 }
-                vds.add(vd);
+                
+                JsonObject entry = new JsonObject();
+                JsonObject values = new JsonObject();
+
+                EntryData ed = EntryData.of(en);
+                entry.add("id", toJson(ed.entryID()));
+                entry.add("name", toJson(en.name()));
+                entry.add("values", values);
+
+                EssenceHelper.foreach(ed, vn -> {
+                    ValueData vd = ValueData.of(vn);
+                    ValExpr ve = vd.value();
+                    if(ve.isError()) {
+                        String err = "%s::%s: %s";
+                        Logging.errorf(log, err, en, vd.path(), ve.value());
+                        containsError[0] = true;
+                    }
+
+                    values.add(vd.path().toString(), toJson(ve.value()));
+                });
+                
+                // We arrange the input as a series of JSON objects, one for
+                // each entry, rather than one huge JSON object for all entries,
+                // so that the exporter script can handle entries incrementally.
+                input.append(gson.toJson(entry))
+                    .append(System.lineSeparator())
+                    .append(System.lineSeparator());
             });
             
-            values.put(Long.valueOf(ed.entryID()).intValue(), vds);
-        });
-        
-        if(containsError[0]) {
-            throw new RuntimeException("Export failed due to value errors.");
-        }
-        
-        JsonObject entries = new JsonObject();
-        for(Map.Entry<Integer, List<ValueData>> e: values.entrySet()) {
-            JsonObject entry = new JsonObject();
-            entries.add(String.valueOf(e.getKey()), entry);
-            
-            for(ValueData vd: e.getValue()) {
-                entry.add(vd.path().toString(), toJson(vd.value().value()));
+            if(containsError[0]) {
+                throw new RuntimeException("Export failed due to value errors.");
             }
-        }
-        
-        Gson gson = new Gson();
-        
-        File folderExport = new File(parentLocation, "export");
-        folderExport.mkdirs();
-
-        File output = new File(folderExport, "entries.json");
-        
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(output);
-            fw.write(gson.toJson(entries));
-        } catch (IOException ex) {
-            Logging.exceptionf(log, Logging.LEVEL_ERROR, ex,
-                    "An error occurred while writing file %s", output);
-        }
-        finally {
-            if(fw != null) {
-                try {
-                    fw.close();
-                }
-                catch (IOException e) {
-                    Logging.exceptionf(log, Logging.LEVEL_ERROR, e,
-                            "An error occurred while closing file %s", output);
-                }
+            
+            Tuple2<String, String> rv = sp.communicate(
+                    Interop.opt(input.toString()));
+            
+            if(0 != sp.proc().exitValue()) {
+                throw new RuntimeException(String.format(
+                        "%s: %s", EXEC_NAME_DATA_EXPORT, rv._2()));
+            }
+        } finally {
+            if(sp.proc().isAlive()) {
+                sp.proc().destroyForcibly();
             }
         }
 	}

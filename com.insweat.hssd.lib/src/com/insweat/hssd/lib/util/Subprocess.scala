@@ -6,28 +6,19 @@ import language.reflectiveCalls
 import java.io.InputStreamReader
 import java.io.BufferedReader
 import java.io.File
+import scala.io.Source
 
 class Subprocess(val proc: Process) {
   def communicate(input: Option[String] = None): (String, String) = {
     val outBuilder = new StringBuilder()
     val errBuilder = new StringBuilder()
 
-    if(input.isDefined) {
-      async {
-        closing(proc.getOutputStream) { stream =>
-          val writer = new BufferedWriter(new OutputStreamWriter(stream))
-          writer.write(input.get)
-        }
-      }
-    }
-    
     async {
       closing(proc.getInputStream) { stream =>
-        val reader = new BufferedReader(new InputStreamReader(stream))
-        var line: String = null
-        while(null != (line = reader.readLine())) {
+        val source = Source.fromInputStream(stream)
+        for(line <- source.getLines()) {
           synchronized {
-            outBuilder.append(line).append(String.format("%n"))
+            outBuilder.append(line).append(System.lineSeparator())
           }
         }
       }
@@ -35,13 +26,20 @@ class Subprocess(val proc: Process) {
 
     async {
       closing(proc.getErrorStream) { stream =>
-        val reader = new BufferedReader(new InputStreamReader(stream))
-        var line: String = null
-        while(null != (line = reader.readLine())) {
+        val source = Source.fromInputStream(stream)
+        for(line <- source.getLines()) {
           synchronized {
-            errBuilder.append(line).append(String.format("%n"))
+            errBuilder.append(line).append(System.lineSeparator())
           }
         }
+      }
+    }
+
+    if(input.isDefined) {
+      closing(proc.getOutputStream) { stream =>
+        val writer = new BufferedWriter(new OutputStreamWriter(stream))
+        writer.write(input.get)
+        writer.flush()
       }
     }
     
@@ -78,5 +76,9 @@ object Subprocess {
     } find { f => 
       f.exists() && f.canExecute()
     }       
+  }
+  
+  def create(args: Array[String]): Subprocess = {
+    new Subprocess(Runtime.getRuntime.exec(args))
   }
 }

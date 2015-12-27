@@ -36,48 +36,50 @@ public class HSSDEditorDupEntry extends AbstractCommandHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-        final HSSDEditor editor = getActiveHSSDEditor();
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+	    return watchedExecute(()->{
+	        final HSSDEditor editor = getActiveHSSDEditor();
+	        ISelectionProvider sp = editor.getSite().getSelectionProvider();
+	        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
 
-        Set<TreeNode> entries = new HashSet<>();
-        for(Iterator<?> itr = sel.iterator(); itr.hasNext();) {
-        	TreeNode en = (TreeNode)itr.next();
-        	entries.add(en);
-        }
-
-        if(!verifySelection(editor, entries)) {
-        	return null;
-        }
-
-        int numIDs = count(entries);
-        List<Long> idList;
-        try {
-        	idList = allocIDs(numIDs);
-        }
-        catch (Exception e) {
-        	log.errorf("Failed to allocate IDs: %s", e);
-        	return null;
-        }
-
-        try {
-	        Iterator<Long> idq = idList.iterator();
-	        for(TreeNode en: entries) {
-	        	TreeNode parent = en.parent().get();
-	        	duplicate(en, parent, idq);
+	        Set<TreeNode> entries = new HashSet<>();
+	        for(Iterator<?> itr = sel.iterator(); itr.hasNext();) {
+	            TreeNode en = (TreeNode)itr.next();
+	            entries.add(en);
 	        }
-        }
-        catch (Exception e) {
-        	String s = "An error occurred while duplicating entries. "
-        			+ "The current HSSD data in memory has corrupted. "
-        			+ "YOU MUST DO A RELOAD WITHOUT SAVING.";
-        	log.criticalf(s);
-        	return null;
-        }
 
-        editor.markDirty();
-        editor.refresh(null, true);
-		return null;
+	        if(!verifySelection(editor, entries)) {
+	            return null;
+	        }
+
+	        int numIDs = count(entries);
+	        List<Long> idList;
+	        try {
+	            idList = allocIDs(numIDs);
+	        }
+	        catch (Exception e) {
+	            log.errorf("Failed to allocate IDs: %s", e);
+	            return null;
+	        }
+
+	        try {
+	            Iterator<Long> idq = idList.iterator();
+	            for(TreeNode en: entries) {
+	                TreeNode parent = en.parent().get();
+	                duplicate(en, parent, idq);
+	            }
+	        }
+	        catch (Exception e) {
+	            String s = "An error occurred while duplicating entries. "
+	                    + "The current HSSD data in memory has corrupted. "
+	                    + "YOU MUST DO A RELOAD WITHOUT SAVING.";
+	            log.criticalf(s);
+	            return null;
+	        }
+
+	        editor.markDirty();
+	        editor.refresh(null, true);
+	        return null;
+	    });
 	}
 
 	private boolean verifySelection(HSSDEditor editor, Set<TreeNode> entries) {

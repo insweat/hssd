@@ -25,45 +25,47 @@ public class HSSDEditorEditTraits extends AbstractCommandHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        HSSDEditor editor = getActiveHSSDEditor();
-        if(editor == null) {
-            return null;
-        }
-        
-        ISelectionProvider sp = editor.getSite().getSelectionProvider();
-        IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
-        TreeNode en = (TreeNode)sel.getFirstElement();
-        EntryData ed = EntryData.of(en);
-
-        Shell shell = editor.getSite().getShell();
-        TraitsDialog dialog = new TraitsDialog(shell, editor);
-        
-        HashSet<TraitThypeLike> currentTraits = getCurrentTraits(ed);
-        dialog.setSelection(currentTraits);
-        dialog.setInheritedTraits(getInheritedTraits(ed));
-
-        if(0 == dialog.open()) {
-            final List<TraitThypeLike> traits = dialog.getSelection();
-
-            final HashSet<TraitThypeLike> toRemove = currentTraits;
-            for(TraitThypeLike tr: traits) {
-                toRemove.remove(tr);
-            }
-            
-            if(!warnDataLoss(shell, toRemove)) {
+        return watchedExecute(()->{
+            HSSDEditor editor = getActiveHSSDEditor();
+            if(editor == null) {
                 return null;
             }
+            
+            ISelectionProvider sp = editor.getSite().getSelectionProvider();
+            IStructuredSelection sel = (IStructuredSelection)sp.getSelection();
+            TreeNode en = (TreeNode)sel.getFirstElement();
+            EntryData ed = EntryData.of(en);
 
-            ed.removeTraits(JavaConversions.iterableAsScalaIterable(toRemove));
-            ed.insertTraits(JavaConversions.iterableAsScalaIterable(traits));
-            ed.packValueTree();
-            ed.markDirty();
+            Shell shell = editor.getSite().getShell();
+            TraitsDialog dialog = new TraitsDialog(shell, editor);
+            
+            HashSet<TraitThypeLike> currentTraits = getCurrentTraits(ed);
+            dialog.setSelection(currentTraits);
+            dialog.setInheritedTraits(getInheritedTraits(ed));
 
-            editor.markDirty();
-            refreshAllEntryEditors();
-        }
+            if(0 == dialog.open()) {
+                final List<TraitThypeLike> traits = dialog.getSelection();
 
-        return null;
+                final HashSet<TraitThypeLike> toRemove = currentTraits;
+                for(TraitThypeLike tr: traits) {
+                    toRemove.remove(tr);
+                }
+                
+                if(!warnDataLoss(shell, toRemove)) {
+                    return null;
+                }
+
+                ed.removeTraits(JavaConversions.iterableAsScalaIterable(toRemove));
+                ed.insertTraits(JavaConversions.iterableAsScalaIterable(traits));
+                ed.packValueTree();
+                ed.markDirty();
+
+                editor.markDirty();
+                refreshAllEntryEditors();
+            }
+
+            return null;
+        });
     }
 
     private HashSet<TraitThypeLike> getCurrentTraits(EntryData ed) {
