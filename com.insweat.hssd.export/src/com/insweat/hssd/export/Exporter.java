@@ -12,6 +12,7 @@ import com.insweat.hssd.lib.essence.EntryData;
 import com.insweat.hssd.lib.essence.Thype;
 import com.insweat.hssd.lib.essence.ValExpr;
 import com.insweat.hssd.lib.essence.ValueData;
+import com.insweat.hssd.lib.essence.ValueError;
 import com.insweat.hssd.lib.interop.EssenceHelper;
 import com.insweat.hssd.lib.interop.Interop;
 import com.insweat.hssd.lib.interop.Logging;
@@ -114,10 +115,11 @@ public class Exporter {
                     ValueData vd = ValueData.of(vn);
                     ValExpr ve = vd.value();
                     TreePath path = vd.path();
-                    if(ve.isError()) {
+                    if(vd.valueText() instanceof ValueError) {
                         String err = "%s::%s: %s";
-                        Logging.errorf(log, err, en, path, ve.value());
+                        Logging.errorf(log, err, en.path(), path, ve.value());
                         containsError[0] = true;
+                        return;
                     }
 
                     Thype thype = vd.element().thype();

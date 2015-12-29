@@ -77,10 +77,10 @@ case class Element(
             case Some(defValStr) => {
                 if(thype.isInstanceOf[CollectionThypeLike]) {
                     val t = thype.asInstanceOf[CollectionThypeLike].elementThype
-                    _defaultValue = Some(t.fixed(t.parse(defValStr)))    
+                    _defaultValue = Some(t.parse(defValStr))
                 }
                 else {
-                    _defaultValue = Some(thype.fixed(thype.parse(defValStr)))
+                    _defaultValue = Some(thype.parse(defValStr))
                 }
             }
             case None => // pass
