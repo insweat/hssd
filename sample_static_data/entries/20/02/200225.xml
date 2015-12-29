@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Entry name="Plain" id="200225" parent="201873" leaf="false">
-    <traits> </traits>
-    <properties> </properties>
+    <traits>
+        <Trait name="ColorTrait"/>
+    </traits>
+    <properties>
+        <Property path="color" sym=":=" value="7"/>
+    </properties>
 </Entry>

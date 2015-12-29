@@ -9,12 +9,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.insweat.hssd.lib.essence.Database;
 import com.insweat.hssd.lib.essence.EntryData;
+import com.insweat.hssd.lib.essence.Thype;
 import com.insweat.hssd.lib.essence.ValExpr;
 import com.insweat.hssd.lib.essence.ValueData;
 import com.insweat.hssd.lib.interop.EssenceHelper;
 import com.insweat.hssd.lib.interop.Interop;
 import com.insweat.hssd.lib.interop.Logging;
 import com.insweat.hssd.lib.tree.EntryTree;
+import com.insweat.hssd.lib.tree.TreePath;
 import com.insweat.hssd.lib.util.Subprocess;
 import com.insweat.hssd.lib.util.logging.Logger;
 
@@ -111,13 +113,16 @@ public class Exporter {
                 EssenceHelper.foreach(ed, vn -> {
                     ValueData vd = ValueData.of(vn);
                     ValExpr ve = vd.value();
+                    TreePath path = vd.path();
                     if(ve.isError()) {
                         String err = "%s::%s: %s";
-                        Logging.errorf(log, err, en, vd.path(), ve.value());
+                        Logging.errorf(log, err, en, path, ve.value());
                         containsError[0] = true;
                     }
 
-                    values.add(vd.path().toString(), toJson(ve.value()));
+                    Thype thype = vd.element().thype();
+                    Object value = thype.fixed(ve.value());
+                    values.add(path.toString(), toJson(value));
                 });
                 
                 // We arrange the input as a series of JSON objects, one for

@@ -23,6 +23,9 @@ class EnumThype(sch: SchemaLike,
     }
 
     override def repr(o: Any): String = reprValue(o)
+    
+    override def fixed(o: Any): Any = 
+      if(o == null) null else o.asInstanceOf[EnumValue].value
 
     override def values(context: Any) = elemVals.sortWith{(x, y) => 
         x.name.compareToIgnoreCase(y.name) < 0

@@ -1,9 +1,11 @@
 [
     {
         "values": {
-            "Root.Entry.tags.0": 200224.0, 
+            "Root.Entry.caption": 10000, 
             "Root.Entry.isPublic": true, 
-            "Root.Export.classNames": "TestHSSD"
+            "Root.Export.classNames": "TestHSSD", 
+            "Root.Entry.tags.0": 200224, 
+            "Root.ColorTrait.color": "12"
         }, 
         "id": 200226, 
         "name": "test_sample_entry_0"

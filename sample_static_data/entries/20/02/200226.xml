@@ -2,6 +2,8 @@
 <Entry name="test_sample_entry_0" id="200226" parent="200225" leaf="true">
     <traits> </traits>
     <properties>
+        <Property path="caption" sym=":=" value="10000.0"/>
+        <Property path="color" sym=":=" value="12"/>
         <Property path="isPublic" sym=":=" value="true"/>
         <Property path="tags" sym="" value=""/>
         <Property path="tags.0" sym=":=" value="200224.0"/>
