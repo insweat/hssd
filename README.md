@@ -7,6 +7,7 @@ An editor for Highly Structured Static Data.
  * The default ID allocator does not allocate ID. Take a look at [exec_id_alloc.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_id_alloc.demo) and implement your own. For example, you can have your `exec_id_alloc` to communicate with a SQL database.
  * The default code generator does not generate code. Take a look at [exec_code_gen.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_code_gen.demo) if you need it.
  * The default data exporter reorganizes the input it gets from `HSSD` and stores the result in JSON (`entries.json`). It is to show you what the input format is rather than to emit useful data in production. Take a look at [exec_data_export.demo](https://github.com/insweat/hssd/blob/master/sample_static_data/exec_data_export.demo) to figure out how you can implement a really useful exporter. You can use a transformed version of `entries.json` (say with [msgpack](http://msgpack.org)), but it would be a good optimization if values of each entry in `entries.json` were presented in a tree structure rather than in a flat one.
+ * [Language files](https://github.com/insweat/hssd/tree/master/sample_static_data/schemas/l10n) need to be processed to export string values of `LString`s in data. This can be done in the data export script.
  * The publish process is not well worked on. Currently, making a build requires a lot of interaction. See [Making Builds Manually](#MakingBuildsManually)
  * We need icon and spash screen of our own.
 
