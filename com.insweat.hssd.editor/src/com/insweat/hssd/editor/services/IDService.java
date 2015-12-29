@@ -75,7 +75,7 @@ public class IDService {
                         "%s: %s", EXEC_NAME, rv._2()));
             }
 
-            return Long.parseLong(rv._1());
+            return Long.parseLong(rv._1().trim());
         } finally {
             if(sp.proc().isAlive()) {
                 sp.proc().destroyForcibly();
